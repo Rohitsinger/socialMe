@@ -1,0 +1,42 @@
+.auth-card{
+  
+    padding: 30px;
+     text-align: center;
+     justify-content: space-between;
+     max-width: 400px;
+     margin: 10px auto;
+}
+
+.mycard{
+  display: grid;
+ place-items: center;
+ margin-top: 50px ;
+}
+
+.gallery{
+    background: rgb(234, 209, 234);
+    border: 1px solid grey;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+   
+    place-items: center;
+    grid-gap: 30px;
+}
+
+.item{
+  width: 80%;
+}
+
+
+.home_card{
+    max-width: 500px;
+    height: max-content;
+    margin: 26px auto;
+
+}
+
+#toast-container{
+  top: 30px !important;
+  right: 20px !important;
+  left: auto !important;
+}
