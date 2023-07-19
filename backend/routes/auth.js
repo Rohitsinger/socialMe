@@ -37,11 +37,11 @@ router.get("/", requireLogin, (req, res) => {
 router.post("/signup", async (req, res) => {
   
 
-  const { name, email, password } = req.body;
+  const { name, email, password,about,worksAt,livesin } = req.body;
   const file = req.files.photo;
   cloudinary.uploader.upload(file.tempFilePath,(error,result)=>{
     console.log(result);
-      if (!email || !password || !name) {
+      if (!email || !password || !name || !about || !worksAt || !livesin) {
     return res.status(422).json({ error: "please enter all the fields" });
   }
   User.findOne({ email: email }).then((savesdUser) => {
@@ -56,6 +56,9 @@ router.post("/signup", async (req, res) => {
         email,
         password:hashedpassword,
         name,
+        about,
+        worksAt,
+        livesin,
         photo:result.url
 
       });
@@ -88,7 +91,7 @@ router.post('/signin',(req,res)=>{
       if(doMatch){
        
         const token = jwt.sign({_id:savedUser._id},JWT_SECRET)
-      
+          
           savedUser.password = undefined;
         res.json({token, user:savedUser})
       } else{

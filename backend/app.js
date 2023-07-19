@@ -40,7 +40,7 @@ app.use(express.urlencoded({
 
 app.use(require('./routes/auth'))
 app.use(require('./routes/post'))
-// app.use(require('./routes/like'))
+app.use(require('./routes/user'))
 
 
 

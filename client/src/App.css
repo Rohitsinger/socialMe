@@ -1,6 +1,12 @@
-@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300&family=Mulish:wght@300;400;500;700&family=Poppins:ital,wght@0,200;1,300&family=Roboto:wght@100;300;400;700;900&family=Ubuntu+Mono:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
 
+:root{
+  --color-yollow : #f9c74f;
+  --color-purple: #9d4edd;
+}
 
-a{
-color:'black' !important;
+* > *{
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  padding: 0;
 }

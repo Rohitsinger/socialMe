@@ -1,7 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
-const requireLogin = require('../middleware/requirelogin')
+const requireLogin = require('../middleware/requirelogin');
+const { CommentedModel } = require("../models/post");
 const Post = mongoose.model("Post")
 const cloudinary = require('cloudinary').v2
 cloudinary.config({ 
@@ -36,10 +37,10 @@ router.post('/createpost',requireLogin,(req,res)=>{
     title,
     body,
     photo:result.url,
-   
     postedBy:req.user
    })
-   post.sort({createdAt:-1})
+   // .
+   // sort({createdAt:-1})
    post.save().then(result=>{
     res.status(201).send({post:result})
    })
@@ -62,9 +63,7 @@ router.get('/mypost',requireLogin,(req,res)=>{
 })
 
 router.post('/like/:id',requireLogin,async(req,res)=>{
-   // const {likes} = req.body
-
-   const post = await Post.findById(req.params.id)
+  const post = await Post.findById(req.params.id)
    if(!post){
       return res.status(400).json({
          success:false,
@@ -78,7 +77,7 @@ router.post('/like/:id',requireLogin,async(req,res)=>{
       return res.status(200).json({
          success:true,
          message:"Post unliked",
-         post
+      
       });
    } else{
       post.likes.push(req.user._id)
@@ -90,22 +89,7 @@ router.post('/like/:id',requireLogin,async(req,res)=>{
    }
 }
 )
-// router.patch('/like/:id',requireLogin,(req,res)=>{
-//    // const {likes} = req.body
-//    const postId = req.params.id
-//     console.log(postId);
-//    Post.findByIdAndUpdate(postId,{
-//        $push:{likes:req.user._id}
-//    },{
-//        new:true
-//    }).exec((err,result)=>{
-//        if(err){
-//            return res.status(422).json({error:err})
-//        }else{
-//            res.json(result)
-//        }
-//    })
-// })
+
 router.patch('/unlike/:id',requireLogin,(req,res)=>{
    const {likes} = req.body
    const postId = req.params.id
@@ -123,13 +107,6 @@ router.patch('/unlike/:id',requireLogin,(req,res)=>{
    })
 })
 
-router.get('/hit',requireLogin,(req,res)=>{
-  res.send("hit");
-  
-})
-
-
-
 router.put('/comment',requireLogin, (req,res)=>{
    const comment = {
       comment:req.body.text,
@@ -143,7 +120,8 @@ router.put('/comment',requireLogin, (req,res)=>{
    },{
       new:true
    })
-   .populate("comments.postedBy","_id name")
+   .populate("postedBy","_id name photo")
+   // .populate("postedBy","_id name")
    .exec((err,result)=>{
       if(err){
          return res.status(422).json({error:err})
@@ -154,22 +132,25 @@ router.put('/comment',requireLogin, (req,res)=>{
       
    })
 })
-router.get('/get-comments', async(req,res)=>{
+// router.get('/get-comments', requireLogin,async(req,res)=>{
 
-const comments =  await Post.find({}).populate("comments.postedBy","_id name photo")
-   if(comments){
-      res.status(200).send({success:true,comments})
-   }else{
+// const comments =  await Post.find({}).populate("postedBy","_id name photo")
+// // .populate("postedBy","_id name")
 
-      res.status(500).send({success:false})
+//    if(comments){
+//       res.status(200).send({success:true,comments})
+//    }else{
 
-   }
-})
+//       res.status(500).send({success:false})
+
+//    }
+// })
 
 router.delete('/delete-post/:postId',requireLogin, async(req,res)=>{
    console.log(req.params.postId);
 
-     await Post.findOne({id:req.params.postId}).populate("postedBy","_id")   
+     await Post.findOne({id:req.params.postId})
+   //   .populate("postedBy","_id")   
    .exec((err,post)=>{
       if(err){
          return res.status(422).json({error:err})

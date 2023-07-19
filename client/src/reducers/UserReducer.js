@@ -4,9 +4,10 @@ import axios from "axios";
 import { createContext, useContext, useEffect, useState } from "react";
 
 const AuthContext = createContext()
-const PostContext = createContext()
+export const PostContext = createContext()
 
 const AuthProvider =({children})=>{
+  const [comments, setComments] = useState([]);
  
     const [auth,setAuth] = useState({
         user:null,
@@ -24,36 +25,33 @@ const AuthProvider =({children})=>{
         setAuth({...auth,user:parseData.user,token:parseData.token})
       }
     }, [])
-    
-    //post Context 
-    const [post,setPost] = useState([])
-    const [posts,setPosts] = useState([])
-    const fetchData=async()=>{
-      const result = await axios.get("/allPost")
-   
-      .then((res)=>
-      setPosts(res.data.posts))
-       console.log(posts);
-     
-      
-  }
-  
-useEffect(()=>{
- fetchData()
+
+
+    //comments
+
+  const fetchComments=async()=>{
+    const result = await axios.get("/get-comments")
+    .then((res)=>setComments(res.data.comments)).catch(err=>console.log(err))
  
-},[])
+}
 
-useEffect(()=>{
-  localStorage.setItem('posts',JSON.stringify(posts))
+      //post Context 
+   
+      const [posts,setPosts] = useState([])
+      const fetchPost=async()=>{
+      const result = await axios.get("/allPost")
+     
+        .then((res)=>
+        setPosts(res.data.posts))
+        fetchComments()
+         console.log(posts);
   
-},[posts])
+    }
+useEffect(()=>{
+  fetchPost()
+ 
 
-useEffect(() => {
-    const data = localStorage.getItem("posts")
-    const  parseData = JSON.parse(data)
-      setPosts({...posts,posts:parseData.posts})
-    
-  }, [])
+},[])
 
 
     

@@ -1,6 +1,11 @@
 const mongoose = require('mongoose')
 const {ObjectId}= mongoose.Schema.Types
 const postSchema = new mongoose.Schema({
+
+    userId:{
+      type:String,
+      required:true
+    },
     title:{
         type:String,
         required:true
@@ -17,8 +22,9 @@ const postSchema = new mongoose.Schema({
         type:ObjectId,
         ref:"User"
     }],
+   
     comments:[{
-        comment: { type: String },
+        comment: { text: String },
      postedBy:{
         type:ObjectId , 
         ref:"User"

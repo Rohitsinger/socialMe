@@ -10,11 +10,15 @@ import Home from './components/Routes/Home';
 import CreatePost from './components/Routes/CreatePost';
 import {ToastContainer} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
+
+import Feeds from './components/Routes/Feeds';
+
 const Routing=()=>{
- 
+
   return(
     <Routes>
-       <Route exact path='/' element={<Home/>}/>
+       <Route exact path='/' element={<Home />}/>
+       <Route  path='/feeds' element={<Feeds />}/>
         <Route path='/signin' element={<Signin/>}/>
         <Route path='/signup' element={<Signup/>}/>
         <Route path='/profile' element={<Profile/>}/>
