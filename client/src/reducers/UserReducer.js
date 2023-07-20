@@ -7,7 +7,7 @@ const AuthContext = createContext()
 export const PostContext = createContext()
 
 const AuthProvider =({children})=>{
-  const [comments, setComments] = useState([]);
+
  
     const [auth,setAuth] = useState({
         user:null,
@@ -27,13 +27,9 @@ const AuthProvider =({children})=>{
     }, [])
 
 
-    //comments
 
-  const fetchComments=async()=>{
-    const result = await axios.get("/get-comments")
-    .then((res)=>setComments(res.data.comments)).catch(err=>console.log(err))
- 
-}
+
+
 
       //post Context 
    
@@ -43,7 +39,7 @@ const AuthProvider =({children})=>{
      
         .then((res)=>
         setPosts(res.data.posts))
-        fetchComments()
+      
          console.log(posts);
   
     }

@@ -12,13 +12,17 @@ import {ToastContainer} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 
 import Feeds from './components/Routes/Feeds';
+import PrivateRoutes from './components/features/PrivateRoutes';
 
 const Routing=()=>{
 
   return(
     <Routes>
+       
+       <Route path='/' element={<PrivateRoutes/>}>
        <Route exact path='/' element={<Home />}/>
-       <Route  path='/feeds' element={<Feeds />}/>
+          <Route  path='feeds' element={<Feeds />}/>
+       </Route>
         <Route path='/signin' element={<Signin/>}/>
         <Route path='/signup' element={<Signup/>}/>
         <Route path='/profile' element={<Profile/>}/>

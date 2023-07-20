@@ -132,19 +132,13 @@ router.put('/comment',requireLogin, (req,res)=>{
       
    })
 })
-// router.get('/get-comments', requireLogin,async(req,res)=>{
+router.get('/get-comments', requireLogin,async(req,res)=>{
 
-// const comments =  await Post.find({}).populate("postedBy","_id name photo")
-// // .populate("postedBy","_id name")
-
-//    if(comments){
-//       res.status(200).send({success:true,comments})
-//    }else{
-
-//       res.status(500).send({success:false})
-
-//    }
-// })
+const comments =  await Post.find({}).populate("comments","_id text postedBy").sort("-createdAt")
+// .populate("postedBy","_id name")
+.then((postComments)=>{res.json({postComments})}).catch(err=>console.log(err))
+ 
+})
 
 router.delete('/delete-post/:postId',requireLogin, async(req,res)=>{
    console.log(req.params.postId);

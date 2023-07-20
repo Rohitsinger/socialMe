@@ -17,13 +17,13 @@ const Signin = () => {
      const {data} =  await axios.post("/signin",{email,password})
      console.log(data);
      
-    
+    if(data){
        setAuth({...auth,user:data.user,token:data.token})
            localStorage.setItem("auth",JSON.stringify(data))
      
          
            navigate('/')
-     
+    }
          
    } catch (error) {
       console.log(error);

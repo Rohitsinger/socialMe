@@ -3,6 +3,7 @@ import { Link,useNavigate } from 'react-router-dom'
 import {CiSearch} from 'react-icons/ci'
 import {AiOutlineHome,AiOutlineMessage,AiOutlineProfile,AiOutlineComment,AiFillDelete} from 'react-icons/ai'
 import {HiTrendingUp} from 'react-icons/hi'
+import {GiHamburgerMenu} from 'react-icons/gi'
 import {FaShareSquare} from 'react-icons/fa'
 import {FcLike,FcLikePlaceholder} from 'react-icons/fc'
 import {BiSolidLike,BiSolidDislike} from 'react-icons/bi'
@@ -14,11 +15,13 @@ const Feeds = () => {
   const [auth,setAuth] = useAuth()
   const [allUser,setAllUser] = useState([])
     const [posts] = usePosts()
+    const [open,setOpen] = useState("")
     console.log(allUser);
+    console.log(posts);
     const [like,setLike] = useState(false)
     const [liked,setLiked] = useState(posts.likes)
     const [comment, setComment] = useState("");
-   
+    const [comments, setComments] = useState([]);
     const [search,setSearch] = useState("")
     const navigate = useNavigate()
    
@@ -28,6 +31,9 @@ const Feeds = () => {
      navigate('/signin')
     }
 
+    const hanldleToggle =()=>{
+        setOpen(!open)
+     }
     
   //like the post
 //     const likePost = async (postId,postedBy)=>{
@@ -54,14 +60,27 @@ useEffect(() => {
  
   const makeComment = async(text,postId)=>{
    try {
-    const response = await axios.put(`/comment`,{postId,text}).then(res=> setComment(res.data))
-   
+    const response = await axios.put(`/comment`,{postId,text}).then((res)=>console.log(res))
     
-   } catch (error) {
+    } catch (error) {
       console.log(error);
    }
   
 }
+    //comments
+
+    const fetchComments=async()=>{
+        const result = await axios.get("/get-comments")
+        .then((res)=>setComments(res.data.comments)).catch(err=>console.log(err))
+     
+    }
+
+    useEffect(() => {
+  
+        fetchComments()
+         
+        }, [])
+    
 
 const handleDelete = async(postId)=>{
    try {
@@ -73,9 +92,23 @@ const handleDelete = async(postId)=>{
       console.log(error);
    }}
 return (
-  <div className='h-screen bg-[#f5d6c3] flex' >
+  <div className='h-full md:h-screen flex justify-center mx-auto  inset-x-0 md:flex  bg-[#f5d6c3] ' >
+<div className=' bg-white shadow-2xl visible flex md:hidden mb-4'>
+<GiHamburgerMenu width={100} onClick={hanldleToggle}/>
 
-<div className='w-1/5 bg-white'>
+{open && (allUser.map((i)=>(
+   <div className='flex py-2 float-right '>
+   <div className='md:z-10  md:mt-4   h-8 w-8 rounded-full md:overflow-hidden border-2 bg-gray-500 focus:outline-none focus:border-black'>
+       <img className='w-full h-full object-cover transition-all duration-500' src={i.photo} alt='photo'/>
+   
+   </div>
+  
+   </div>
+)
+))}
+
+</div>
+<div className='w-1/5 bg-white hidden md:block '>
 
 <div className='h-3/6'>
 <div className=' flex flex-col  ml-8 justify-evenly mr-4 space-y-12 font-sans  text-sm font-light'>
@@ -91,7 +124,7 @@ return (
   </div>
 </div>
 
-<div className='w-3/5 overflow-scroll h-full bg scrollbar-hide mt-8'>
+<div className=' w-full  md:w-3/5 overflow-scroll md:h-full bg scrollbar-hide mt-16'>
 <div className='flex float-right w-96 mb-4'>
         <input onChange={(e)=>setSearch(e.target.value)} type='text' className='shadow appearance-none border rounded  w-full py-2 px-3 mt-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline' />
         <CiSearch size={50}/>
@@ -171,7 +204,7 @@ return (
         </form>
       </div>
       <div>
-      { 
+             { 
                item.comments.map((p,index)=>(
                       <>
                       <div className='flex space-x-10' key={index}>
@@ -191,10 +224,10 @@ return (
      }
      </div>
      </div>
-       <div className='w-1/5 bg-slate-700'>
+       <div className='hidden md:w-1/5 bg-gray-800  md:flex md:flex-col'>
 
          {allUser.map((i)=>(
-            <div className='flex py-2'>
+            <div className='flex py-2 float-right '>
             <div className='z-10  mt-4   h-8 w-8 rounded-full overflow-hidden border-2 bg-gray-500 focus:outline-none focus:border-black'>
                 <img className='w-full h-full object-cover transition-all duration-500' src={i.photo} alt='photo'/>
             
