@@ -15,5 +15,11 @@ router.get('/alluser',async(req,res)=>{
     res.status(200).json(allUser)
     
 })
+router.get('/singleUser/:id',async(req,res)=>{
+    const id = req.params.id
+    const singleUser = await User.findById(id)
+    res.status(200).json(singleUser)
+    
+})
 
 module.exports = router

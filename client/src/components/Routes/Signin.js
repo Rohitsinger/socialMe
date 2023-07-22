@@ -1,6 +1,6 @@
-import React,{useState,useContext} from 'react'
+import React,{useState} from 'react'
 import '../Style/Signin.css'
-import { Link,useNavigate } from 'react-router-dom'
+import { Link,useLocation,useNavigate } from 'react-router-dom'
 // import { UserContext } from '../../App'
 import axios from 'axios'
 import { useAuth } from '../../reducers/UserReducer'
@@ -10,7 +10,7 @@ const Signin = () => {
   const navigate = useNavigate()
   const [email,setEmail] = useState("")
   const [password,setPassword] = useState("")
-
+  const location = useLocation()
   const PostData = async()=>{
  
    try {
@@ -22,7 +22,7 @@ const Signin = () => {
            localStorage.setItem("auth",JSON.stringify(data))
      
          
-           navigate('/')
+           navigate(location.state || '/')
     }
          
    } catch (error) {

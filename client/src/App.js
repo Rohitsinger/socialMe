@@ -20,7 +20,7 @@ const Routing=()=>{
     <Routes>
        
        <Route path='/' element={<PrivateRoutes/>}>
-       <Route exact path='/' element={<Home />}/>
+       <Route exact path='home' element={<Home />}/>
           <Route  path='feeds' element={<Feeds />}/>
        </Route>
         <Route path='/signin' element={<Signin/>}/>

@@ -14,10 +14,13 @@ import { toast } from 'react-toastify'
 const Feeds = () => {
   const [auth,setAuth] = useAuth()
   const [allUser,setAllUser] = useState([])
+  const [singleUser,setSingleUser] = useState([])
     const [posts] = usePosts()
     const [open,setOpen] = useState("")
     console.log(allUser);
     console.log(posts);
+  
+
     const [like,setLike] = useState(false)
     const [liked,setLiked] = useState(posts.likes)
     const [comment, setComment] = useState("");
@@ -54,8 +57,19 @@ const Feeds = () => {
         }
 }
 useEffect(() => {
-    allUsers()
-   }, [])
+  allUsers()
+ }, [])
+// const SingleUsers = async(id)=>{
+//   try {
+//    const response = await axios.get(`/singleUser/${id}`).then(res=>console.log(res.data))
+  
+//    } catch (error) {
+//      console.log(error);
+//   }
+// }
+// useEffect(() => {
+//   SingleUsers()
+//  }, [])
      //make comment
  
   const makeComment = async(text,postId)=>{
@@ -230,9 +244,16 @@ return (
             <div className='flex py-2 float-right '>
             <div className='z-10  mt-4   h-8 w-8 rounded-full overflow-hidden border-2 bg-gray-500 focus:outline-none focus:border-black'>
                 <img className='w-full h-full object-cover transition-all duration-500' src={i.photo} alt='photo'/>
-            
+             
             </div>
             <span className='mt-5 font-semibold'>{i.name}</span>
+            {/* {
+              singleUser.map((singleUser,id)=>(
+                <div>
+                <button onClick={()=>SingleUsers(singleUser.id)}>click</button>
+                </div>
+              ))
+            } */}
             </div>
          ))}
        </div>
