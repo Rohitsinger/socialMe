@@ -3,7 +3,7 @@ import { Link,useNavigate } from 'react-router-dom'
 import {CiSearch} from 'react-icons/ci'
 import {AiOutlineHome,AiOutlineMessage,AiOutlineProfile,AiOutlineComment,AiFillDelete} from 'react-icons/ai'
 import {HiTrendingUp} from 'react-icons/hi'
-import {GiHamburgerMenu} from 'react-icons/gi'
+import {BsChevronCompactLeft,BsChevronCompactRight} from 'react-icons/bs'
 import {FaShareSquare} from 'react-icons/fa'
 import {FcLike,FcLikePlaceholder} from 'react-icons/fc'
 import {BiSolidLike,BiSolidDislike} from 'react-icons/bi'
@@ -15,7 +15,8 @@ const Feeds = () => {
   const [auth,setAuth] = useAuth()
   const [allUser,setAllUser] = useState([])
   const [singleUser,setSingleUser] = useState([])
-    const [posts] = usePosts()
+  const [slide,setSlide] = useState(0)
+     const [posts] = usePosts()
     const [open,setOpen] = useState("")
     console.log(allUser);
     console.log(posts);
@@ -34,9 +35,17 @@ const Feeds = () => {
      navigate('/signin')
     }
 
-    const hanldleToggle =()=>{
-        setOpen(!open)
-     }
+   //scroll left
+
+   const scrollLeft = () =>{
+     document.getElementById('content').scrollLeft -= 800
+   }
+
+   //scroll Right
+
+   const scrollRight = () =>{
+    document.getElementById('content').scrollRightt += 800
+   }
     
   //like the post
 //     const likePost = async (postId,postedBy)=>{
@@ -106,22 +115,9 @@ const handleDelete = async(postId)=>{
       console.log(error);
    }}
 return (
-  <div className='h-full md:h-screen flex justify-center mx-auto  inset-x-0 md:flex  bg-[#f5d6c3] ' >
-<div className=' bg-white shadow-2xl visible flex md:hidden mb-4'>
-<GiHamburgerMenu width={100} onClick={hanldleToggle}/>
+  <div className='h-full md:h-screen w-full flex justify-center mx-auto   md:flex  bg-[#f5d6c3] ' >
 
-{open && (allUser.map((i)=>(
-   <div className='flex py-2 float-right '>
-   <div className='md:z-10  md:mt-4   h-8 w-8 rounded-full md:overflow-hidden border-2 bg-gray-500 focus:outline-none focus:border-black'>
-       <img className='w-full h-full object-cover transition-all duration-500' src={i.photo} alt='photo'/>
-   
-   </div>
-  
-   </div>
-)
-))}
 
-</div>
 <div className='w-1/5 bg-white hidden md:block '>
 
 <div className='h-3/6'>
@@ -139,7 +135,24 @@ return (
 </div>
 
 <div className=' w-full  md:w-3/5 overflow-scroll md:h-full bg scrollbar-hide mt-16'>
-<div className='flex float-right w-96 mb-4'>
+<div id='content' className='flex ml-20  px-2 items-center  md:hidden fixed'>
+<div  className='flex  group transition-all duration-300'>
+   <BsChevronCompactLeft onClick={scrollLeft} className='hidden group-hover:block mt-14 rounded-full'/>
+  {
+  allUser.map((user,id)=>(
+    
+    <div className='z-10 h-16 mt-8 w-16 rounded-full overflow-hidden border-2 bg-gray-500 focus:outline-none focus:border-black'>
+    <Link to='/enter' > <img className='w-full h-full object-cover transition-all duration-500'  key={user._id} src={user.photo} alt='photo'/>
+            </Link>
+    </div>
+  ))
+}
+<BsChevronCompactRight onClick={scrollRight} className='mt-14 rounded-full hidden group-hover:block'/>
+</div>
+</div>
+
+<div className='flex float-right w-96 mt-24 md:m-0 mb-2 md:mb-4'>
+
         <input onChange={(e)=>setSearch(e.target.value)} type='text' className='shadow appearance-none border rounded  w-full py-2 px-3 mt-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline' />
         <CiSearch size={50}/>
         </div>
@@ -156,7 +169,7 @@ return (
         
         }).map((item)=>{
           return(
-            <div className='bg-white  w-[75%] h-full flex flex-col items-center m-auto'>
+            <div className='bg-white w-full md:w-[75%] h-full flex flex-col items-center m-auto'>
             <div className='card home_card' key={item._id}>
             <div className='flex '>
             <img className="w-10  rounded-full" src={item.postedBy?.photo}/>
@@ -164,8 +177,8 @@ return (
         <AiFillDelete className='float-right ml-40' onClick={()=>handleDelete(item._id)}/>
         </div>
        
-        <h5 className='mt-2 ml-2 font-medium border-b-8'>{item.postedBy?.email}</h5>
-         <div className='card-image'>
+        <h5 className='mt-2 ml-2 font-medium border-b-8'>{item.postedBy?.createdAt}</h5>
+         <div className=''>
             <img src={item.photo} alt="" />
         </div>
         <div className=' flex justify-between mt-4'>
@@ -238,13 +251,13 @@ return (
      }
      </div>
      </div>
-       <div className='hidden md:w-1/5 bg-gray-800  md:flex md:flex-col'>
+       <div className='hidden md:w-1/5 bg-white shadow-lg  md:flex md:flex-col'>
 
-         {allUser.map((i)=>(
-            <div className='flex py-2 float-right '>
+         {allUser.map((i,userId)=>(
+            <div className='flex py-2 float-right ' key={i._id}>
             <div className='z-10  mt-4   h-8 w-8 rounded-full overflow-hidden border-2 bg-gray-500 focus:outline-none focus:border-black'>
-                <img className='w-full h-full object-cover transition-all duration-500' src={i.photo} alt='photo'/>
-             
+            <Link to='/chats' > <img className='w-full h-full object-cover transition-all duration-500' key={i._id} src={i.photo} alt='photo'/>
+            </Link>
             </div>
             <span className='mt-5 font-semibold'>{i.name}</span>
             {/* {
@@ -264,15 +277,3 @@ return (
 export default Feeds
 
 
-//  const Details = ({posts}) => {
-//     return <Home 
-//       // userId= {auth.user._id}
-//       likes= {posts.likes}
-//       comments= {posts.comments.comment}
-//       photo= {posts.photo}
-//       postedBy= {posts.postedBy}
-//       title= {posts.title}
-//       body= {posts.body}
-//       postId= {posts._id}
-//     />
-//  }

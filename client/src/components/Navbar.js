@@ -19,7 +19,7 @@ const openToggle =()=>{
     if(!auth.user){
        return [
         <div>
-        <a  className='md:hidden cursor-pointer text-4xl' onClick={openToggle}>&#8801;</a>
+        <a  className='md:hidden cursor-pointer text-4xl transition-all  duration-300 ' onClick={openToggle}>&#8801;</a>
           {
           openLinks && (
             <div className='   md:min-h-fit'>

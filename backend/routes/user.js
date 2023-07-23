@@ -10,9 +10,12 @@ router.get('/user-auth',requirelogin,async(req,res)=>{
 })
 
 //all user
-router.get('/alluser',async(req,res)=>{
+router.get('/alluser',requirelogin,async(req,res)=>{
+    if(!req.body._id){
     const allUser = await User.find({})
     res.status(200).json(allUser)
+    }
+   
     
 })
 router.get('/singleUser/:id',async(req,res)=>{
