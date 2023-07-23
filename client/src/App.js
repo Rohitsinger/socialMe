@@ -1,6 +1,6 @@
 import React,{useEffect,createContext,useReducer,useContext} from 'react';
 import {BrowserRouter,Routes,Route, useNavigate} from 'react-router-dom'
-import axios from 'axios';
+
 import './App.css';
 import Navbar from './components/Navbar';
 import Signin from './components/Routes/Signin';
@@ -10,10 +10,10 @@ import Home from './components/Routes/Home';
 import CreatePost from './components/Routes/CreatePost';
 import {ToastContainer} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
-import ChatRoutes from './components/Routes/Chats/ChatRoutes';
+
 import Feeds from './components/Routes/Feeds';
 import PrivateRoutes from './components/features/PrivateRoutes';
-import Enter from './components/Routes/Enter';
+
 
 const Routing=()=>{
 
@@ -23,8 +23,7 @@ const Routing=()=>{
        <Route exact path='/' element={<PrivateRoutes/>}>
      
           <Route   path='/feeds' element={<Feeds />}/>
-          <Route   path='/enter' element={<Enter />}/>
-          {/* <Route  path='/chats' element={<ChatRoutes />}/> */}
+      
        </Route>
         <Route path='/signin' element={<Signin/>}/>
         <Route path='/signup' element={<Signup/>}/>
