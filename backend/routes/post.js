@@ -31,18 +31,17 @@ router.post('/createpost',requireLogin,(req,res)=>{
    if(!title || !body ){
     return res.status(422).json({err:"Please add all the fields"})
    }
-
-
-   const post = new Post({
+    const post = new Post({
     title,
     body,
     photo:result.url,
     postedBy:req.user
    })
-   // .
-   // sort({createdAt:-1})
+   // . sort({createdAt:-1})
    post.save().then(result=>{
-    res.status(201).send({post:result})
+    res.status(201).send({
+      success:true,
+      post:result})
    })
    .catch(err=>{
     console.log(err);
@@ -140,27 +139,17 @@ const comments =  await Post.find({}).populate("comments","_id text postedBy").s
  
 })
 
-router.delete('/delete-post/:postId',requireLogin, async(req,res)=>{
-   console.log(req.params.postId);
-
-     await Post.findOne({id:req.params.postId})
-   //   .populate("postedBy","_id")   
-   .exec((err,post)=>{
-      if(err){
-         return res.status(422).json({error:err})
-      }
-      if(post.postedBy._id.toString()===req.user._id.toString()){
-        post.remove()
-        .then(result=>{
-         return res.status(200).send({message:"Deleted Successfully",success:true})
-        }).catch(err=>console.log(err));
-
-      }
-      else{
-         res.json(post)
-      }
-      
-   })
+router.delete('/delete-post/:id',requireLogin, async(req,res)=>{
+  const {_id} =  req.params;
+  
+  try {
+   const deletedId =  await Post.findOneAndDelete({id:_id})
+ res.status(200).send({message:"Deleted Successfully",success:true})   
+  
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({message:"Couldnot Delete ",success:false}) 
+  }
   
    })
 

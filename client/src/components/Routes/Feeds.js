@@ -14,9 +14,9 @@ import { toast } from 'react-toastify'
 const Feeds = () => {
   const [auth,setAuth] = useAuth()
   const [allUser,setAllUser] = useState([])
-  const [singleUser,setSingleUser] = useState([])
-  const [slide,setSlide] = useState(0)
-     const [posts] = usePosts()
+
+  const [posts,setPosts] = useState([])
+    
     const [open,setOpen] = useState("")
     console.log(allUser);
     console.log(posts);
@@ -65,20 +65,23 @@ const Feeds = () => {
            console.log(error);
         }
 }
-useEffect(() => {
+
+const fetchPost=async()=>{
+const result = await axios.get("/allPost")
+
+  .then((res)=>
+
+  setPosts(res.data.posts))
+ }
+
+ useEffect(() => {
   allUsers()
+
  }, [])
-// const SingleUsers = async(id)=>{
-//   try {
-//    const response = await axios.get(`/singleUser/${id}`).then(res=>console.log(res.data))
-  
-//    } catch (error) {
-//      console.log(error);
-//   }
-// }
-// useEffect(() => {
-//   SingleUsers()
-//  }, [])
+ useEffect(() => {
+  fetchPost()
+
+ }, [])
      //make comment
  
   const makeComment = async(text,postId)=>{
@@ -106,14 +109,15 @@ useEffect(() => {
     
 
 const handleDelete = async(postId)=>{
-   try {
+   
     const {data} = await axios.delete(`/delete-post/${postId}`)
-     if(data.success===true){
+    if(data.success){
+       fetchPost()
         toast.success("Deleted") 
-      }
-    } catch (error) {
-      console.log(error);
-   }}
+    }
+  }
+
+
 return (
   <div className='h-full md:h-screen w-full flex justify-center mx-auto   md:flex  bg-[#f5d6c3] ' >
 
@@ -135,14 +139,15 @@ return (
 </div>
 
 <div className=' w-full  md:w-3/5 overflow-scroll md:h-full bg scrollbar-hide mt-16'>
-<div id='content' className='flex ml-20  px-2 items-center  md:hidden fixed'>
+<div id='content' className='flex ml-20  items-center  md:hidden '>
 <div  className='flex  group transition-all duration-300'>
    <BsChevronCompactLeft onClick={scrollLeft} className='hidden group-hover:block mt-14 rounded-full'/>
   {
   allUser.map((user,id)=>(
     
     <div className='z-10 h-16 mt-8 w-16 rounded-full overflow-hidden border-2 bg-gray-500 focus:outline-none focus:border-black'>
-    <Link to='/enter' > <img className='w-full h-full object-cover transition-all duration-500'  key={user._id} src={user.photo} alt='photo'/>
+    <Link to={`/${allUser._id}`} > <img className='w-full h-full object-cover transition-all duration-500'  key={user._id} src={user.photo} alt='photo'/>
+       
             </Link>
     </div>
   ))
@@ -172,9 +177,13 @@ return (
             <div className='bg-white w-full md:w-[75%] h-full flex flex-col items-center m-auto'>
             <div className='card home_card' key={item._id}>
             <div className='flex '>
-            <img className="w-10  rounded-full" src={item.postedBy?.photo}/>
+            <Link to={`${item.postedBy._id}`}><img className="w-10  rounded-full cursor-pointer" src={item.postedBy?.photo} /></Link>
         <h5 className='mt-2 ml-2 font-semibold'>{item.postedBy?.name}</h5>
+        <button>
+        {/* {auth.user._id===item.postedBy._id? */}
         <AiFillDelete className='float-right ml-40' onClick={()=>handleDelete(item._id)}/>
+        {/* :null} */}
+        </button>
         </div>
        
         <h5 className='mt-2 ml-2 font-medium border-b-8'>{item.postedBy?.createdAt}</h5>
@@ -256,7 +265,7 @@ return (
          {allUser.map((i,userId)=>(
             <div className='flex py-2 float-right ' key={i._id}>
             <div className='z-10  mt-4   h-8 w-8 rounded-full overflow-hidden border-2 bg-gray-500 focus:outline-none focus:border-black'>
-            <Link to='/chats' > <img className='w-full h-full object-cover transition-all duration-500' key={i._id} src={i.photo} alt='photo'/>
+            <Link to={`/${i._id}`} > <img className='w-full h-full object-cover transition-all duration-500' key={i._id} src={i.photo} alt='photo'/>
             </Link>
             </div>
             <span className='mt-5 font-semibold'>{i.name}</span>

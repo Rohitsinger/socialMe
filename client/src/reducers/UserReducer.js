@@ -45,9 +45,8 @@ const AuthProvider =({children})=>{
     }
 useEffect(()=>{
   fetchPost()
+ },[])
  
-
-},[])
 
 
     

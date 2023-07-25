@@ -13,6 +13,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import Feeds from './components/Routes/Feeds';
 import PrivateRoutes from './components/features/PrivateRoutes';
+import UserProfile from './components/Routes/UserProfile';
 
 
 const Routing=()=>{
@@ -23,11 +24,13 @@ const Routing=()=>{
        <Route exact path='/' element={<PrivateRoutes/>}>
      
           <Route   path='/feeds' element={<Feeds />}/>
+          <Route exact path='/profile' element={<Profile/>}/>
+          <Route   path='/feeds/:userId' element={<UserProfile />}/>
       
        </Route>
         <Route path='/signin' element={<Signin/>}/>
         <Route path='/signup' element={<Signup/>}/>
-        <Route path='/profile' element={<Profile/>}/>
+     
         <Route path='/create' element={<CreatePost/>}/>
      
     </Routes>
