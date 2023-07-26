@@ -60,23 +60,28 @@ router.put('/follow/:id',requirelogin,async(req,res)=>{
 
 //to follow user
 
-router.put('/unfollow',requirelogin,async(req,res)=>{
-    await User.findByIdAndUpdate(req.body.followId,{
-      $pull:{followers:req.user._id}
-     },{new:true},
-       (err,result)=>{
-          if(err){
-              return res.status(422).json({error:err})
-          }
-          User.findByIdAndUpdate(req.user._id,{
-              $pull:{following:req.body.followId}
-           },{
-              new:true
-          }).then(result=>res.json(result))
-          .catch(err=>{return res.status(422).json({error:err})})
-       }
-     )
-  })
+router.put('/follow/:id',requirelogin,async(req,res)=>{
+  const {id} = req.params;
+  const {_id} = req.body;
+  if(_id===id){
+   return res.status(403).json({message:"Action Forbidden"})
+  } else{
+   try {
+     const followUser = await User.findById(id)
+     const followingUser = await User.findById(_id)
+     if(!followUser.following.includes(_id)){
+       await followUser.updateOne({  $pull:{followers:_id}})
+       await followingUser.updateOne({  $pull:{following:id}})
+       res.status(200).json("User Followed")
+     }else{
+       res.status(403).json("User is already followed by u")
+     }
+   } catch (error) {
+      res.status(500).json(error)
+   }
+  }
+ 
+})
   
 
 

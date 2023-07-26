@@ -26,15 +26,10 @@ const AuthProvider =({children})=>{
       }
     }, [])
 
-
-
-
-
-
-      //post Context 
+    //post Context 
    
       const [posts,setPosts] = useState([])
-      const fetchPost=async()=>{
+      const fetchPosts=async()=>{
       const result = await axios.get("/allPost")
      
         .then((res)=>
@@ -44,7 +39,7 @@ const AuthProvider =({children})=>{
   
     }
 useEffect(()=>{
-  fetchPost()
+  fetchPosts()
  },[])
  
 

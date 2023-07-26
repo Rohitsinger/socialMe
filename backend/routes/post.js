@@ -138,13 +138,28 @@ const comments =  await Post.find({}).populate("comments","_id text postedBy").s
 .then((postComments)=>{res.json({postComments})}).catch(err=>console.log(err))
  
 })
+router.patch('/edit-post/:id',requireLogin, async(req,res)=>{
+   const {body,title,photo} = req.body
+   const _id =  req.params.id
+  try {
+ 
+ const updated = await Post.findByIdAndUpdate(_id,{...req.body},{new:true})
+ res.status(200).send({message:"Updated Successfully",success:true,updated})   
+  
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({message:"Couldnot Update ",success:false}) 
+  }
+  
+   })
 
 router.delete('/delete-post/:id',requireLogin, async(req,res)=>{
-  const {_id} =  req.params;
-  
+
+   const _id =  req.params.id
   try {
-   const deletedId =  await Post.findOneAndDelete({id:_id})
- res.status(200).send({message:"Deleted Successfully",success:true})   
+ 
+ const deleted = await Post.findByIdAndDelete(_id)
+ res.status(200).send({message:"Deleted Successfully",success:true,deleted})   
   
   } catch (error) {
     console.log(error);

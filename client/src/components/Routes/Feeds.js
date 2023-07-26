@@ -1,10 +1,11 @@
 import React,{useEffect, useState, useContext} from 'react'
 import { Link,useNavigate } from 'react-router-dom'
 import {CiSearch} from 'react-icons/ci'
-import {AiOutlineHome,AiOutlineMessage,AiOutlineProfile,AiOutlineComment,AiFillDelete} from 'react-icons/ai'
+import {AiOutlineHome,AiOutlineMessage,AiOutlineProfile,AiOutlineComment,AiFillDelete, AiFillEdit} from 'react-icons/ai'
 import {HiTrendingUp} from 'react-icons/hi'
 import {BsChevronCompactLeft,BsChevronCompactRight} from 'react-icons/bs'
 import {FaShareSquare} from 'react-icons/fa'
+import {BiAlignMiddle} from 'react-icons/bi'
 import {FcLike,FcLikePlaceholder} from 'react-icons/fc'
 import {BiSolidLike,BiSolidDislike} from 'react-icons/bi'
 import axios from 'axios'
@@ -14,20 +15,19 @@ import { toast } from 'react-toastify'
 const Feeds = () => {
   const [auth,setAuth] = useAuth()
   const [allUser,setAllUser] = useState([])
-
   const [posts,setPosts] = useState([])
-    
-    const [open,setOpen] = useState("")
-    console.log(allUser);
-    console.log(posts);
-  
-
-    const [like,setLike] = useState(false)
+  const [open,setOpen] = useState(false)
+  const [openModals,setOpenModals] = useState(false)
+  const [like,setLike] = useState(false)
     const [liked,setLiked] = useState(posts.likes)
     const [comment, setComment] = useState("");
     const [comments, setComments] = useState([]);
     const [search,setSearch] = useState("")
     const navigate = useNavigate()
+    const [title,setTitle] = useState("")
+    const [body,setBody] = useState("")
+    const [photo,setPhoto] = useState("")
+  
    
     const handleLogout =()=>{
      setAuth({...auth,user:null,token:""})
@@ -46,6 +46,11 @@ const Feeds = () => {
    const scrollRight = () =>{
     document.getElementById('content').scrollRightt += 800
    }
+// toggle 
+   const handleToggle = () => {
+    setOpen(!open)
+   }
+
     
   //like the post
 //     const likePost = async (postId,postedBy)=>{
@@ -57,6 +62,8 @@ const Feeds = () => {
 //      useEffect(() => {
 //      likePost()
 //     }, [])
+
+//allUsers
     const allUsers = async()=>{
         try {
          const response = await axios.get(`/alluser`).then(res=> setAllUser(res.data))
@@ -65,6 +72,8 @@ const Feeds = () => {
            console.log(error);
         }
 }
+
+//allposts
 
 const fetchPost=async()=>{
 const result = await axios.get("/allPost")
@@ -106,8 +115,17 @@ const result = await axios.get("/allPost")
         fetchComments()
          
         }, [])
-    
 
+        const handleEdit = async(postId)=>{
+   
+    const {data} = await axios.patch(`/edit-post/${postId}`)
+    if(data.success){
+       fetchPost()
+        toast.success("updated Successfully") 
+    }
+  }
+    
+//delete posts
 const handleDelete = async(postId)=>{
    
     const {data} = await axios.delete(`/delete-post/${postId}`)
@@ -115,6 +133,10 @@ const handleDelete = async(postId)=>{
        fetchPost()
         toast.success("Deleted") 
     }
+  }
+
+  const openModal=()=>{
+    setOpenModals(!openModals)
   }
 
 
@@ -180,9 +202,45 @@ return (
             <Link to={`${item.postedBy._id}`}><img className="w-10  rounded-full cursor-pointer" src={item.postedBy?.photo} /></Link>
         <h5 className='mt-2 ml-2 font-semibold'>{item.postedBy?.name}</h5>
         <button>
-        {/* {auth.user._id===item.postedBy._id? */}
-        <AiFillDelete className='float-right ml-40' onClick={()=>handleDelete(item._id)}/>
-        {/* :null} */}
+       <BiAlignMiddle className='ml-72' onClick={handleToggle}/>
+      {auth.user._id===item.postedBy._id ? open  && (
+        <>
+        <AiFillDelete className='float-right ' onClick={()=>{handleDelete(item._id)}}/>
+        <AiFillEdit className='float-right ' onClick={openModal}/>
+        {
+          openModals && (<>
+            <div class="relative w-full max-w-md max-h-full">
+        <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+            <button type="button" class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="popup-modal">
+                <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                </svg>
+                <span class="sr-only">Close modal</span>
+            </button>
+            <div class="p-6 text-center">
+            <input type="text" placeholder='title' value={title} onChange={(e)=>setTitle(e.target.value)} />
+      <input type="text" placeholder='body' value={body} onChange={(e)=>setBody(e.target.value)}/>
+      <div className="file-field input-field">
+      
+     
+      <label className=' mb-2 inline-block text-neutral-700 dark:text-neutral-200 mt-32'   >
+            {photo ? photo.name : "Upload Photo"}
+              <input type='file' name='photo' accept='image/*' required  onChange={(e)=>setPhoto(e.target.files[0])}  className='relative m-0 block w-full min-w-0 flex-auto rounded border border-solid border-neutral-300 bg-clip-padding px-3 py-[0.32rem] text-base font-normal text-neutral-700 transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:overflow-hidden file:rounded-none file:border-0 file:border-solid file:border-inherit file:bg-neutral-100 file:px-3 file:py-[0.32rem] file:text-neutral-700 file:transition file:duration-150 file:ease-in-out file:[border-inline-end-width:1px] file:[margin-inline-end:0.75rem] hover:file:bg-neutral-200 focus:border-primary focus:text-neutral-700 focus:shadow-te-primary focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:file:bg-neutral-700 dark:file:text-neutral-100 dark:focus:border-primary' size={25}/>
+            </label>
+    </div>
+                <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">Are you sure you want to Edit this post</h3>
+                <button data-modal-hide="popup-modal" type="button" class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2">
+                <AiFillEdit className='float-right ' onClick={()=>{handleEdit(item._id)}}/>
+                </button>
+                <button data-modal-hide="popup-modal" onClick={openModal} type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">No, cancel</button>
+            </div>
+        </div>
+    </div>
+          </>)
+        }
+       
+        </>
+      ):null}
         </button>
         </div>
        

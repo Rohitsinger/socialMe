@@ -15,7 +15,7 @@ const UserProfile = () => {
   
     const [singlePost, setSinglePost] = useState([])
     const [allUser, setAllUser] = useState([])
-
+    console.log(singleUser);
     const { userId } = useParams()
     
   
@@ -31,14 +31,6 @@ const UserProfile = () => {
     }
     useEffect(() => {
         allUsers()
-    }, [])
-    const fetchData = async () => {
-        const result = await axios.get("/mypost").then((res) =>
-            setSinglePost(res.data.mypost))
-       
-    }
-    useEffect(() => {
-        fetchData();
     }, [])
 
     //single users
@@ -65,18 +57,18 @@ const UserProfile = () => {
     //follow user
 
 
-    const followUser = async (singleId) => {
-        const {fetchFollow} = await axios.put(`/follow/${singleId}`,{_id:auth.user._id} )
+    const followUser = async (_id) => {
+       await axios.put(`/follow/${_id}`,{_id:auth.user._id} )
         
-      .then(res=>setFollowUserId(res.data))
+      .then(res=>console.log(res.data))
             
     }
     
-    useEffect(() => {
+    // useEffect(() => {
 
-        followUser()
+    //     followUser()
         
-            }, [])
+    //         }, [])
     //unfollow user
 
     const unfollowUser = async (singleId) => {
@@ -94,12 +86,14 @@ const UserProfile = () => {
                     <img src={user?.photo} alt="" className='w-full h-full object-cover transition-all duration-300' />
                 </div>
                 <div className='mt-24'>
-                    <div div style={{ display: "flex", justifyContent: 'space-between', margin: "10px" }}>
+                    <div style={{ display: "flex", justifyContent: 'space-between', margin: "10px" }}>
 
                         <div className='h-2/6 flex  flex-col justify-center items-center'>
 
                             <div className='float-right ml-36 md:ml-96'>
-                                <button className='rounded-md m-2 p-2 font-bold bg-slate-200' onClick={() => {followUser(singleUser._id) }}>{followUserId?"UnFollow":"Follow"}</button>
+                                <button className='rounded-md m-2 p-2 font-bold bg-slate-200' onClick={() =>followUser(user._id)}>
+                                {console.log(user._id)}
+                                {followUserId?"Following":"Follow"}</button>
                             </div>
                             <h3 className=' text-2xl'>{user?.name}</h3>
                             <span className=''>{user?.email}</span>

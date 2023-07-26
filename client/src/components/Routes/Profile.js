@@ -1,14 +1,19 @@
 import React, { useEffect,useState,useContext } from 'react'
 
 import '../Style/Signin.css'
-import { useAuth } from '../../reducers/UserReducer'
+import { useAuth, usePosts } from '../../reducers/UserReducer'
 import axios from 'axios'
+import { useParams } from 'react-router-dom'
 const Profile = () => {
 const [auth] = useAuth()
-  // const [followUser,setFollowUser] = useState([])
-  const [singlePost,setSinglePost] = useState([])
+const [singleUser, setSingleUser] = useState([])
+const [singlePost,setSinglePost] = useState([])
+  const [followUserId,setFollowUserId] = useState([])
+
   const [allUser,setAllUser] = useState([])
-   console.log(allUser);
+  
+  const { userId } = useParams()
+   console.log(singleUser);
   //fetch all users
   const allUsers = async()=>{
     try {
@@ -30,11 +35,37 @@ allUsers()
     fetchData();
   },[])
 
-  //follow user
 
-  const followUser = async(userId) => {
-    const fetchFollow = await axios.put(`/follow/`,{followingId:userId}).then(res=>console.log(res.data)).catch(err=>console.log(err))
-  }
+//singlwuser
+  useEffect(() => {
+
+    axios.get(`/singleUser/${userId}`).then((res) => {
+        
+        setSingleUser(res.data.user)
+   
+    
+        setSinglePost(res.data.post)
+
+    })
+
+
+}, [])
+
+     //follow user
+
+
+  //    const followUser = async (singleId) => {
+  //     const {fetchFollow} = await axios.put(`/follow/${singleId}`,{_id:auth.user._id} )
+      
+  //   .then(res=>setFollowUserId(res.data))
+          
+  // }
+  
+  // useEffect(() => {
+
+  //     followUser()
+      
+  //         }, [])
   //unfollow user
 
   const unfollowUser = async(userId) => {
@@ -53,29 +84,31 @@ allUsers()
             <div className='h-2/6 flex  flex-col justify-center items-center'>
        
             <div className='float-right ml-36 md:ml-96'>
-    <button className='rounded-md m-2 p-2 font-bold bg-slate-200' onClick={()=>{followUser(allUser._id)}}>follow</button>
+    {/* <button className='rounded-md m-2 p-2 font-bold bg-slate-200' onClick={()=>{followUser(singleUser._id)}}>follow</button> */}
     </div>
       <h3 className=' text-2xl'>{auth?.user?.name}</h3>
       <span className=''>{auth?.user?.email}</span>
       <span className=''>{auth?.user?.worksAt}</span>
       <span className=''>{auth?.user?.livesin}</span>
       <span className='ml-16'>{auth?.user?.about}</span>
-
-     
-    <div className='border h-[50px] flex justify-center items-center w-full space-x-6  mt-4'>
+{singleUser.map((user)=>(
+  <div className='border h-[50px] flex justify-center items-center w-full space-x-6  mt-4'>
     <div className='flex flex-col justify-around items-center' >
       <h4>{singlePost.length}</h4>
       <p>Posts</p>
     </div>
     <div>
-    <h4>1000</h4>
+    <h4>{user.following}</h4>
       <p>following</p>
     </div>
     <div>
-    <h4>1000</h4>
+    <h4>{user.followers}</h4>
       <p>Followers</p>
     </div>
     </div>
+))}
+     
+
       
    
   </div>
