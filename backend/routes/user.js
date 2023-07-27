@@ -49,7 +49,7 @@ router.put('/follow/:id',requirelogin,async(req,res)=>{
         await followingUser.updateOne({  $push:{following:id}})
         res.status(200).json("User Followed")
       }else{
-        res.status(403).json("User is already followed by u")
+        res.status(400).json("User is already followed by u")
       }
     } catch (error) {
        res.status(500).json(error)
@@ -60,7 +60,7 @@ router.put('/follow/:id',requirelogin,async(req,res)=>{
 
 //to follow user
 
-router.put('/follow/:id',requirelogin,async(req,res)=>{
+router.put('/unfollow/:id',requirelogin,async(req,res)=>{
   const {id} = req.params;
   const {_id} = req.body;
   if(_id===id){
@@ -74,7 +74,7 @@ router.put('/follow/:id',requirelogin,async(req,res)=>{
        await followingUser.updateOne({  $pull:{following:id}})
        res.status(200).json("User Followed")
      }else{
-       res.status(403).json("User is already followed by u")
+       res.status(400).json("User is already followed by u")
      }
    } catch (error) {
       res.status(500).json(error)

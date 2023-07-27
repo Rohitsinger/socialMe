@@ -24,9 +24,10 @@ const Feeds = () => {
     const [comments, setComments] = useState([]);
     const [search,setSearch] = useState("")
     const navigate = useNavigate()
-    const [title,setTitle] = useState("")
-    const [body,setBody] = useState("")
-    const [photo,setPhoto] = useState("")
+    const [singlePost,setSinglePost] = useState([])
+    const [title,setTitle] = useState({})
+    const [body,setBody] = useState({})
+    const [photo,setPhoto] = useState({})
   
    
     const handleLogout =()=>{
@@ -72,6 +73,25 @@ const Feeds = () => {
            console.log(error);
         }
 }
+//single User
+const fetchSinglePost = async()=>{
+    try {
+      const {data} = await axios.get("/mypost")
+       if(data){
+        setSinglePost(data.mypost)
+         setTitle(data.mypost.title)
+         setBody(data.mypost.body)
+         setPhoto(data.mypost.photo)
+       }
+      
+    } catch (error) {
+      
+    }
+}
+useEffect(()=>{
+  fetchSinglePost();
+
+},[])
 
 //allposts
 
@@ -115,13 +135,24 @@ const result = await axios.get("/allPost")
         fetchComments()
          
         }, [])
+        
+
+        //edit post
 
         const handleEdit = async(postId)=>{
-   
-    const {data} = await axios.patch(`/edit-post/${postId}`)
+          const appenddata = new  FormData()
+          appenddata.append("title",title)
+          appenddata.append("body",body)
+        
+          appenddata.append("photo",photo)
+        
+    const {data} = await axios.patch(`/edit-post/${postId}`,appenddata)
+    console.log(data);
     if(data.success){
+  
        fetchPost()
         toast.success("updated Successfully") 
+      setOpenModals(false)
     }
   }
     
@@ -129,6 +160,7 @@ const result = await axios.get("/allPost")
 const handleDelete = async(postId)=>{
    
     const {data} = await axios.delete(`/delete-post/${postId}`)
+    
     if(data.success){
        fetchPost()
         toast.success("Deleted") 

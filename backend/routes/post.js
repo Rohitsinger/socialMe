@@ -139,12 +139,24 @@ const comments =  await Post.find({}).populate("comments","_id text postedBy").s
  
 })
 router.patch('/edit-post/:id',requireLogin, async(req,res)=>{
-   const {body,title,photo} = req.body
+   const {body,title} = req.body
+   const file = req.files.photo;
    const _id =  req.params.id
   try {
+   cloudinary.uploader.upload(file.tempFilePath,(error,result)=>{
+      console.log(result);
+ const updated =  Post.findByIdAndUpdate(_id,{
+   $set:{
+        title,
+        body,
+        photo:result.url,
+        postedBy:req.user
+   
  
- const updated = await Post.findByIdAndUpdate(_id,{...req.body},{new:true})
- res.status(200).send({message:"Updated Successfully",success:true,updated})   
+      }
+ },{new:true})
+})
+ res.status(200).send({message:"Updated Successfully",success:true})   
   
   } catch (error) {
     console.log(error);

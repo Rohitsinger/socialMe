@@ -11,11 +11,13 @@ const UserProfile = () => {
    const [auth] = useAuth()
   
     const [followUserId,setFollowUserId] = useState([])
+    const [unfollowUserId,setUnFollowUserId] = useState([])
+    const [isFollow,setIsFollow] = useState(false)
     const [singleUser, setSingleUser] = useState([])
-  
     const [singlePost, setSinglePost] = useState([])
     const [allUser, setAllUser] = useState([])
-    console.log(singleUser);
+    
+    console.log(singleUser,allUser);
     const { userId } = useParams()
     
   
@@ -34,46 +36,60 @@ const UserProfile = () => {
     }, [])
 
     //single users
-
-    //   const SingleUser = async({userId})=>{
-
-    //   }
-    // }
-
-    useEffect(() => {
-
-        axios.get(`/singleUser/${userId}`).then((res) => {
+    const getSingleUser = ()=>{ axios.get(`/singleUser/${userId}`).then((res) => {
             
-            setSingleUser(res.data.user)
+        setSingleUser(res.data.user)
+        setSinglePost(res.data.post)
+        followUser()
+        unfollowUser()
        
-        
-            setSinglePost(res.data.post)
+    })
+
+}
+    useEffect(() => {
+     getSingleUser()
   
-        })
-
-
     }, [])
     
     //follow user
 
 
     const followUser = async (_id) => {
-       await axios.put(`/follow/${_id}`,{_id:auth.user._id} )
-        
-      .then(res=>console.log(res.data))
+  try {
+    const response = await axios.put(`/follow/${_id}`,{_id:auth.user._id} )
+    .then((res)=>{
+        setFollowUserId(res.data)
+        getSingleUser()
+        isFollow(true)
+    })
+  
+  } catch (error) {
+    console.log(error);
+  }
             
     }
     
-    // useEffect(() => {
-
-    //     followUser()
-        
-    //         }, [])
+    useEffect(() => {
+     followUser()
+   }, [])
     //unfollow user
 
-    const unfollowUser = async (singleId) => {
-        const fetchFollow = await axios.put(`/unfollow`, { followId: singleId })
+    const unfollowUser = async (_id) => {
+     try {
+        const fetchFollow = await axios.put(`/unfollow/${_id}`, { _id:auth.user._id })
+        .then((res)=>{
+            setUnFollowUserId(res.data)
+            getSingleUser()
+            setIsFollow(false)
+        })
+        
+     } catch (error) {
+        console.log(error);
+     }
     }
+    useEffect(() => {
+        unfollowUser()
+      }, [])
     return (
         <div style={{ maxWidth: "550px", margin: "10px auto" }}>
           
@@ -91,9 +107,13 @@ const UserProfile = () => {
                         <div className='h-2/6 flex  flex-col justify-center items-center'>
 
                             <div className='float-right ml-36 md:ml-96'>
-                                <button className='rounded-md m-2 p-2 font-bold bg-slate-200' onClick={() =>followUser(user._id)}>
-                                {console.log(user._id)}
-                                {followUserId?"Following":"Follow"}</button>
+                      {user.followers.includes(auth.user._id)?<button className='rounded-md m-2 p-2 font-bold bg-slate-200' onClick={() =>{unfollowUser(user._id)} }>
+                                unfollow
+                        </button>
+                        :          <button className='rounded-md m-2 p-2 font-bold bg-slate-200' onClick={() =>{followUser(user._id)} }>
+                                Follow
+                        </button>
+                        }
                             </div>
                             <h3 className=' text-2xl'>{user?.name}</h3>
                             <span className=''>{user?.email}</span>
