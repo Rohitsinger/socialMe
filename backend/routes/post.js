@@ -61,7 +61,7 @@ router.get('/mypost',requireLogin,(req,res)=>{
   })
 })
 
-router.post('/like/:id',requireLogin,async(req,res)=>{
+router.patch('/like/:id',requireLogin,async(req,res)=>{
   const post = await Post.findById(req.params.id)
    if(!post){
       return res.status(400).json({
@@ -89,26 +89,26 @@ router.post('/like/:id',requireLogin,async(req,res)=>{
 }
 )
 
-router.patch('/unlike/:id',requireLogin,(req,res)=>{
-   const {likes} = req.body
-   const postId = req.params.id
-    console.log(postId);
-   Post.findByIdAndUpdate(postId,{
-       $pull:{likes:req.user._id}
-   },{
-       new:true
-   }).exec((err,result)=>{
-       if(err){
-           return res.status(422).json({error:err})
-       }else{
-            res.json(result)
-       }
-   })
-})
+// router.patch('/unlike/:id',requireLogin,(req,res)=>{
+//    const {likes} = req.body
+//    const postId = req.params.id
+//     console.log(postId);
+//    Post.findByIdAndUpdate(postId,{
+//        $pull:{likes:req.user._id}
+//    },{
+//        new:true
+//    }).exec((err,result)=>{
+//        if(err){
+//            return res.status(422).json({error:err})
+//        }else{
+//             res.json(result)
+//        }
+//    })
+// })
 
 router.put('/comment',requireLogin, (req,res)=>{
    const comment = {
-      comment:req.body.text,
+      text:req.body.text,
       postedBy:req.user._id
    }
    console.log(comment);
@@ -140,23 +140,12 @@ const comments =  await Post.find({}).populate("comments","_id text postedBy").s
 })
 router.patch('/edit-post/:id',requireLogin, async(req,res)=>{
    const {body,title} = req.body
-   const file = req.files.photo;
+   const file= req.files.photo
    const _id =  req.params.id
   try {
-   cloudinary.uploader.upload(file.tempFilePath,(error,result)=>{
-      console.log(result);
- const updated =  Post.findByIdAndUpdate(_id,{
-   $set:{
-        title,
-        body,
-        photo:result.url,
-        postedBy:req.user
-   
  
-      }
- },{new:true})
-})
- res.status(200).send({message:"Updated Successfully",success:true})   
+ const updated = await Post.findByIdAndUpdate(_id,{...req.body,file},{new:true})
+ res.status(200).send({message:"Updated Successfully",success:true,updated})   
   
   } catch (error) {
     console.log(error);

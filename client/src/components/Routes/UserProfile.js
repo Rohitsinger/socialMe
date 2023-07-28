@@ -35,14 +35,11 @@ const UserProfile = () => {
         allUsers()
     }, [])
 
-    //single users
+    //single user
     const getSingleUser = ()=>{ axios.get(`/singleUser/${userId}`).then((res) => {
             
         setSingleUser(res.data.user)
         setSinglePost(res.data.post)
-        followUser()
-        unfollowUser()
-       
     })
 
 }

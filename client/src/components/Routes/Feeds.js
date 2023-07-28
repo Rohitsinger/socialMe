@@ -19,7 +19,7 @@ const Feeds = () => {
   const [open,setOpen] = useState(false)
   const [openModals,setOpenModals] = useState(false)
   const [like,setLike] = useState(false)
-    const [liked,setLiked] = useState(posts.likes)
+    const [liked,setLiked] = useState([])
     const [comment, setComment] = useState("");
     const [comments, setComments] = useState([]);
     const [search,setSearch] = useState("")
@@ -28,7 +28,7 @@ const Feeds = () => {
     const [title,setTitle] = useState({})
     const [body,setBody] = useState({})
     const [photo,setPhoto] = useState({})
-  
+  console.log(posts);
    
     const handleLogout =()=>{
      setAuth({...auth,user:null,token:""})
@@ -53,16 +53,6 @@ const Feeds = () => {
    }
 
     
-  //like the post
-//     const likePost = async (postId,postedBy)=>{
-//     const likeIt = await axios.post(`/like/${postId}`,postedBy).then(res=>
-//    console.log(res.data)
-//     )
-//     setLike(!like)
-//      }
-//      useEffect(() => {
-//      likePost()
-//     }, [])
 
 //allUsers
     const allUsers = async()=>{
@@ -136,6 +126,21 @@ const result = await axios.get("/allPost")
          
         }, [])
         
+          //like the post
+    const likePost = async (postId)=>{
+      const likeIt = await axios.patch(`/like/${postId}`).then(res=>{
+     setLiked(res.data)
+     fetchPost()
+     setLike((like)=>(!like))
+      }
+      )
+     
+       }
+     
+      //  useEffect(() => {
+      //   likePost()
+      //  }, [])
+  
 
         //edit post
 
@@ -282,11 +287,11 @@ return (
         </div>
         <div className=' flex justify-between mt-4'>
        
-            {/* <span onClick={()=>likePost(item._id)}> */}
+            <span onClick={()=>likePost(item._id)}> 
       
-          {/* {item.likes ? <FcLikePlaceholder />  :<FcLike /> } */}
-             
-            {/* </span> */}
+          { item.likes.includes(auth.user._id)? <FcLike />  :<FcLikePlaceholder /> } 
+             {item.likes.length}
+             </span>
           
             <h5 className='flex '> <FaShareSquare className='mr-1 mt-[3px]'/> Shares</h5>
             <h5 className='flex'><AiOutlineComment className='mr-1 mt-[3px]' onClick={()=>makeComment(item._id)}/> Comments</h5>
