@@ -9,6 +9,8 @@ const Navbar = () => {
 const [auth,setAuth] = useAuth()
 const [open,setOpen] = useState("")
 const [openLinks,setOpenLinks] = useState("")
+
+
 const hanldleToggle =()=>{
    setOpen(!open)
 }

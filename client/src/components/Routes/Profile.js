@@ -3,16 +3,16 @@ import React, { useEffect,useState,useContext } from 'react'
 import '../Style/Signin.css'
 import { useAuth, usePosts } from '../../reducers/UserReducer'
 import axios from 'axios'
-import { useParams } from 'react-router-dom'
+
 const Profile = () => {
 const [auth] = useAuth()
 const [singleUser, setSingleUser] = useState([])
 const [singlePost,setSinglePost] = useState([])
-  const [followUserId,setFollowUserId] = useState([])
+
 
   const [allUser,setAllUser] = useState([])
   
-  const { userId } = useParams()
+ 
    console.log(singleUser);
   //fetch all users
   const allUsers = async()=>{
@@ -39,7 +39,7 @@ allUsers()
 //singlwuser
   useEffect(() => {
 
-    axios.get(`/singleUser/${userId}`).then((res) => {
+    axios.get(`/singleUser/${auth.user._id}`).then((res) => {
         
         setSingleUser(res.data.user)
    
@@ -51,31 +51,11 @@ allUsers()
 
 }, [])
 
-     //follow user
-
-
-  //    const followUser = async (singleId) => {
-  //     const {fetchFollow} = await axios.put(`/follow/${singleId}`,{_id:auth.user._id} )
-      
-  //   .then(res=>setFollowUserId(res.data))
-          
-  // }
-  
-  // useEffect(() => {
-
-  //     followUser()
-      
-  //         }, [])
-  //unfollow user
-
-  const unfollowUser = async(userId) => {
-    const fetchFollow = await axios.put(`/unfollow`,{followId:userId})
-  }
   return (
     <div style={{maxWidth:"550px", margin:"10px auto"}}>
        <div style={{display:'flex', justifyContent:'space-between', margin: "18px 5px" , borderBottom:"1px solid grey"}}  >
       
-        <div className='mt-24 mx-auto w--32 rounded-md overflow-hidden'>
+        <div className='mt-24 mx-auto w-32 rounded-md overflow-hidden'>
             <img src={auth?.user?.photo} alt="" className='w-full h-full object-cover transition-all duration-300' />
         </div>
         <div className='mt-24'>
@@ -98,11 +78,11 @@ allUsers()
       <p>Posts</p>
     </div>
     <div>
-    <h4>{user.following}</h4>
+    <h4>0{auth.user.following}</h4>
       <p>following</p>
     </div>
     <div>
-    <h4>{user.followers}</h4>
+    <h4>0{auth.user.followers}</h4>
       <p>Followers</p>
     </div>
     </div>

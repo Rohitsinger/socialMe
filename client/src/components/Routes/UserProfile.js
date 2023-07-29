@@ -57,7 +57,7 @@ const UserProfile = () => {
     .then((res)=>{
         setFollowUserId(res.data)
         getSingleUser()
-        isFollow(true)
+    setIsFollow(true)
     })
   
   } catch (error) {

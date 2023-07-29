@@ -18,17 +18,19 @@ const Feeds = () => {
   const [posts,setPosts] = useState([])
   const [open,setOpen] = useState(false)
   const [openModals,setOpenModals] = useState(false)
+  const [openComments,setOpenComments] = useState(false)
   const [like,setLike] = useState(false)
     const [liked,setLiked] = useState([])
     const [comment, setComment] = useState("");
     const [comments, setComments] = useState([]);
+    const [commented, setCommented] = useState([]);
     const [search,setSearch] = useState("")
     const navigate = useNavigate()
     const [singlePost,setSinglePost] = useState([])
     const [title,setTitle] = useState({})
     const [body,setBody] = useState({})
     const [photo,setPhoto] = useState({})
-  console.log(posts);
+
    
     const handleLogout =()=>{
      setAuth({...auth,user:null,token:""})
@@ -50,6 +52,10 @@ const Feeds = () => {
 // toggle 
    const handleToggle = () => {
     setOpen(!open)
+   }
+// toggle comments
+   const openComment = () => {
+    setOpenComments(!openComments)
    }
 
     
@@ -105,8 +111,10 @@ const result = await axios.get("/allPost")
  
   const makeComment = async(text,postId)=>{
    try {
-    const response = await axios.put(`/comment`,{postId,text}).then((res)=>console.log(res))
+    const response = await axios.put(`/comment`,{postId,text}).then((res)=>setCommented(res.data.comments.text))
     
+    setComment("")
+    fetchComments()
     } catch (error) {
       console.log(error);
    }
@@ -116,10 +124,12 @@ const result = await axios.get("/allPost")
 
     const fetchComments=async()=>{
         const result = await axios.get("/get-comments")
-        .then((res)=>setComments(res.data.comments)).catch(err=>console.log(err))
-     
+        .then((res)=>setComments(res.data.postComments)).catch(err=>console.log(err))
+       
+        setComment("")
+        
     }
-
+ 
     useEffect(() => {
   
         fetchComments()
@@ -134,17 +144,9 @@ const result = await axios.get("/allPost")
      setLike((like)=>(!like))
       }
       )
-     
-       }
-     
-      //  useEffect(() => {
-      //   likePost()
-      //  }, [])
-  
-
-        //edit post
-
-        const handleEdit = async(postId)=>{
+     }
+//edit post
+          const handleEdit = async(postId)=>{
           const appenddata = new  FormData()
           appenddata.append("title",title)
           appenddata.append("body",body)
@@ -188,7 +190,7 @@ return (
         <div className='mt-4 flex text-gray-600 ml-4'><AiOutlineHome className='mr-1 mt-[3px]'/> Home</div>
         <div className=' mt-4 flex ml-3 text-gray-600'><HiTrendingUp className='mr-1 mt-[3px]'/>Trending</div>
         <div className=' mt-4 flex ml-3 text-gray-600'> <AiOutlineMessage className='mr-1 mt-[3px]'/>Messages</div>
-        <div className='  mt-4 flex ml-3 text-gray-600'><Link to='/profile'><AiOutlineProfile className='mr-1 mt-[3px]' />Profile</Link></div>
+       
        
       </div>
   </div>
@@ -220,6 +222,7 @@ return (
         <input onChange={(e)=>setSearch(e.target.value)} type='text' className='shadow appearance-none border rounded  w-full py-2 px-3 mt-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline' />
         <CiSearch size={50}/>
         </div>
+        
 <div >
    
     {
@@ -234,6 +237,7 @@ return (
         }).map((item)=>{
           return(
             <div className='bg-white w-full md:w-[75%] h-full flex flex-col items-center m-auto'>
+            
             <div className='card home_card' key={item._id}>
             <div className='flex '>
             <Link to={`${item.postedBy._id}`}><img className="w-10  rounded-full cursor-pointer" src={item.postedBy?.photo} /></Link>
@@ -315,7 +319,7 @@ return (
                 value={comment}
                 onChange={(e) => {
                   setComment(e.target.value);
-                  console.log(comment)
+                 
                 }}
                
               />
@@ -326,7 +330,7 @@ return (
                   e.preventDefault()
                 }else{
                  makeComment(comment, item._id)
-                 console.log(comment);
+                
                 }
                }}
              >
@@ -335,13 +339,15 @@ return (
         </form>
       </div>
       <div>
-             { 
-               item.comments.map((p,index)=>(
+      <button onClick={openComment} className='m-2 p-2 rounded-md hover:bg-slate-600 transition-all duration-300 ease-in bg-slate-400'>View Comments</button>
+           { 
+        openComments &&  item.comments.map((p,index)=>(
                       <>
                       <div className='flex space-x-10' key={index}>
-                       <div className=''>
-                <p>{p.comment}</p>
-                </div>
+                      <img src={p.postedBy.photo} alt='photo' className='rounded-full h-8 w-8'/>
+                 <span>{p.postedBy.name}</span>
+                      <h2>{p.text}</h2>
+                   
                  </div>
                  </>
                     ))
@@ -353,10 +359,12 @@ return (
       )
         }) 
      }
+    
      </div>
+    
      </div>
        <div className='hidden md:w-1/5 bg-white shadow-lg  md:flex md:flex-col'>
-
+         
          {allUser.map((i,userId)=>(
             <div className='flex py-2 float-right ' key={i._id}>
             <div className='z-10  mt-4   h-8 w-8 rounded-full overflow-hidden border-2 bg-gray-500 focus:outline-none focus:border-black'>
@@ -364,13 +372,6 @@ return (
             </Link>
             </div>
             <span className='mt-5 font-semibold'>{i.name}</span>
-            {/* {
-              singleUser.map((singleUser,id)=>(
-                <div>
-                <button onClick={()=>SingleUsers(singleUser.id)}>click</button>
-                </div>
-              ))
-            } */}
             </div>
          ))}
        </div>

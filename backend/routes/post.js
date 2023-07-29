@@ -14,6 +14,7 @@ cloudinary.config({
 router.get('/allpost',(req,res)=>{
    Post.find({})
    .populate("postedBy","_id name email photo")
+   .populate("comments.postedBy","_id name photo")
    .then(posts=>{
       res.json({posts})
    })
@@ -133,11 +134,12 @@ router.put('/comment',requireLogin, (req,res)=>{
 })
 router.get('/get-comments', requireLogin,async(req,res)=>{
 
-const comments =  await Post.find({}).populate("comments","_id text postedBy").sort("-createdAt")
-// .populate("postedBy","_id name")
+const comments =  await Post.find().populate("comments.postedBy","_id name photo").sort("-createdAt")
+
 .then((postComments)=>{res.json({postComments})}).catch(err=>console.log(err))
  
-})
+}
+)
 router.patch('/edit-post/:id',requireLogin, async(req,res)=>{
    const {body,title} = req.body
    const file= req.files.photo
