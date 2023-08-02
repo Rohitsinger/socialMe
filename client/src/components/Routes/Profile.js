@@ -78,11 +78,11 @@ allUsers()
       <p>Posts</p>
     </div>
     <div>
-    <h4>0{auth.user.following}</h4>
+    <h4>{auth.user.following.length}</h4>
       <p>following</p>
     </div>
     <div>
-    <h4>0{auth.user.followers}</h4>
+    <h4>{auth.user.followers.length}</h4>
       <p>Followers</p>
     </div>
     </div>

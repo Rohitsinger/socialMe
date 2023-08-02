@@ -20,18 +20,18 @@ const Routing=()=>{
 
   return(
     <Routes>
-         <Route  path='/home' element={<Home />}/>
-       <Route exact path='/' element={<PrivateRoutes/>}>
+         <Route  path='/' element={<Home />}/>
+       <Route  path='/home' element={<PrivateRoutes/>}>
      
-          <Route   path='/feeds' element={<Feeds />}/>
-          <Route exact path='/profile' element={<Profile/>}/>
-          <Route   path='/feeds/:userId' element={<UserProfile />}/>
-      
+          <Route   path='/home/feeds' element={<Feeds />}/>
+          <Route path='/home/profile' element={<Profile/>}/>
+          <Route   path='/home/feeds/:userId' element={<UserProfile />}/>
+          <Route path='/home/create' element={<CreatePost/>}/>
        </Route>
         <Route path='/signin' element={<Signin/>}/>
         <Route path='/signup' element={<Signup/>}/>
      
-        <Route path='/create' element={<CreatePost/>}/>
+      
      
     </Routes>
   )

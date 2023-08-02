@@ -90,22 +90,6 @@ router.patch('/like/:id',requireLogin,async(req,res)=>{
 }
 )
 
-// router.patch('/unlike/:id',requireLogin,(req,res)=>{
-//    const {likes} = req.body
-//    const postId = req.params.id
-//     console.log(postId);
-//    Post.findByIdAndUpdate(postId,{
-//        $pull:{likes:req.user._id}
-//    },{
-//        new:true
-//    }).exec((err,result)=>{
-//        if(err){
-//            return res.status(422).json({error:err})
-//        }else{
-//             res.json(result)
-//        }
-//    })
-// })
 
 router.put('/comment',requireLogin, (req,res)=>{
    const comment = {
@@ -121,7 +105,7 @@ router.put('/comment',requireLogin, (req,res)=>{
       new:true
    })
    .populate("postedBy","_id name photo")
-   // .populate("postedBy","_id name")
+   
    .exec((err,result)=>{
       if(err){
          return res.status(422).json({error:err})
@@ -138,8 +122,19 @@ const comments =  await Post.find().populate("comments.postedBy","_id name photo
 
 .then((postComments)=>{res.json({postComments})}).catch(err=>console.log(err))
  
+})
+router.delete('/delete-comments/:id', requireLogin,async(req,res)=>{
+   const _id = req.params.id
+try {
+   const deleted =  await Post.findByIdAndDelete(_id)
+   
+ res.status(200).send({message:"Deleted Successfully",success:true,deleted})  
+} catch (error) {
+   console.log(error);
 }
-)
+    
+   }
+   )
 router.patch('/edit-post/:id',requireLogin, async(req,res)=>{
    const {body,title} = req.body
    const file= req.files.photo

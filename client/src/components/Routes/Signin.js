@@ -22,7 +22,7 @@ const Signin = () => {
            localStorage.setItem("auth",JSON.stringify(data))
      
          
-           navigate(location.state || '/')
+           navigate(location.state || '/home')
     }
          
    } catch (error) {

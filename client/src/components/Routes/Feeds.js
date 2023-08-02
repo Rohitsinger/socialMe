@@ -1,7 +1,7 @@
 import React,{useEffect, useState, useContext} from 'react'
 import { Link,useNavigate } from 'react-router-dom'
 import {CiSearch} from 'react-icons/ci'
-import {AiOutlineHome,AiOutlineMessage,AiOutlineProfile,AiOutlineComment,AiFillDelete, AiFillEdit} from 'react-icons/ai'
+import {AiOutlineComment,AiFillDelete, AiFillEdit} from 'react-icons/ai'
 import {HiTrendingUp} from 'react-icons/hi'
 import {BsChevronCompactLeft,BsChevronCompactRight} from 'react-icons/bs'
 import {FaShareSquare} from 'react-icons/fa'
@@ -9,8 +9,13 @@ import {BiAlignMiddle} from 'react-icons/bi'
 import {FcLike,FcLikePlaceholder} from 'react-icons/fc'
 import {BiSolidLike,BiSolidDislike} from 'react-icons/bi'
 import axios from 'axios'
-import {  useAuth, usePosts } from '../../reducers/UserReducer'
+import {  useAuth } from '../../reducers/UserReducer'
 import { toast } from 'react-toastify'
+import Lottie from 'lottie-react'
+import animation_lkqfwh0y from '../../components/animations/animation_lkqfwh0y.json'
+import animation_lkqhb84m from '../../components/animations/animation_lkqhb84m.json'
+import animation_lkqsqqa0 from '../../components/animations/animation_lkqsqqa0.json'
+import animation_lktd8jxk from '../../components/animations/animation_lktd8jxk.json'
 
 const Feeds = () => {
   const [auth,setAuth] = useAuth()
@@ -25,18 +30,15 @@ const Feeds = () => {
     const [comments, setComments] = useState([]);
     const [commented, setCommented] = useState([]);
     const [search,setSearch] = useState("")
-    const navigate = useNavigate()
+    
+    const [singleUser, setSingleUser] = useState([])
     const [singlePost,setSinglePost] = useState([])
     const [title,setTitle] = useState({})
     const [body,setBody] = useState({})
     const [photo,setPhoto] = useState({})
 
    
-    const handleLogout =()=>{
-     setAuth({...auth,user:null,token:""})
-     localStorage.clear()
-     navigate('/signin')
-    }
+ 
 
    //scroll left
 
@@ -112,9 +114,9 @@ const result = await axios.get("/allPost")
   const makeComment = async(text,postId)=>{
    try {
     const response = await axios.put(`/comment`,{postId,text}).then((res)=>setCommented(res.data.comments.text))
-    
+
+    fetchPost()
     setComment("")
-    fetchComments()
     } catch (error) {
       console.log(error);
    }
@@ -125,9 +127,7 @@ const result = await axios.get("/allPost")
     const fetchComments=async()=>{
         const result = await axios.get("/get-comments")
         .then((res)=>setComments(res.data.postComments)).catch(err=>console.log(err))
-       
         setComment("")
-        
     }
  
     useEffect(() => {
@@ -174,6 +174,21 @@ const handleDelete = async(postId)=>{
     }
   }
 
+  //singlwuser
+  useEffect(() => {
+
+    axios.get(`/singleUser/${auth.user._id}`).then((res) => {
+        
+        setSingleUser(res.data.user)
+   
+    
+        setSinglePost(res.data.post)
+
+    })
+
+
+}, [])
+
   const openModal=()=>{
     setOpenModals(!openModals)
   }
@@ -184,32 +199,51 @@ return (
 
 
 <div className='w-1/5 bg-white hidden md:block '>
-
-<div className='h-3/6'>
-<div className=' flex flex-col  ml-8 justify-evenly mr-4 space-y-12 font-sans  text-sm font-light'>
-        <div className='mt-4 flex text-gray-600 ml-4'><AiOutlineHome className='mr-1 mt-[3px]'/> Home</div>
-        <div className=' mt-4 flex ml-3 text-gray-600'><HiTrendingUp className='mr-1 mt-[3px]'/>Trending</div>
-        <div className=' mt-4 flex ml-3 text-gray-600'> <AiOutlineMessage className='mr-1 mt-[3px]'/>Messages</div>
-       
-       
+<div className=' flex flex-col flex-wrap justify-evenly  font-sans  text-sm font-normal'>
+       <Lottie animationData={animation_lkqfwh0y}/>
+       <div>
+      <div className='mt-24 mx-auto w-32 rounded-md overflow-hidden'>
+            <img src={auth?.user?.photo} alt="" className='w-full h-full object-cover transition-all duration-300' />
+        </div>
+      <h3 className='flex flex-wrap text-2xl'>{auth?.user?.name}</h3>
+      <span className='text-xs'>{auth?.user?.email}</span><br/>
+      <span className='ml-16'>{auth?.user?.worksAt}</span><br/>
+      <span className='ml-8'>{auth?.user?.livesin}</span><br/>
+      <span>{auth?.user?.about}</span>
+      {singleUser.map((user)=>(
+  <div className='border h-[50px] flex justify-center items-center w-full space-x-6  mt-4'>
+    <div className='flex flex-col justify-around items-center' >
+      <h4>{singlePost.length}</h4>
+      <p>Posts</p>
+    </div>
+    <div>
+    <h4>{auth.user.following.length}</h4>
+      <p>following</p>
+    </div>
+    <div>
+    <h4>{auth.user.followers.length}</h4>
+      <p>Followers</p>
+    </div>
+    </div>
+))}
+     
       </div>
-  </div>
-<div className='h-1/6'>
-<div onClick={handleLogout} className='cursor-pointer bg-red-400 w-32 h-8 text-center ml-20 rounded-md hover:bg-white transition-all duration-200'>Logout </div>
-  </div>
+    
+      </div>
+
 </div>
 
-<div className=' w-full  md:w-3/5 overflow-scroll md:h-full bg scrollbar-hide mt-16'>
+<div className=' w-full  md:w-3/5 overflow-scroll md:h-full bg scrollbar-hide mt-20'>
 <div id='content' className='flex ml-20  items-center  md:hidden '>
 <div  className='flex  group transition-all duration-300'>
-   <BsChevronCompactLeft onClick={scrollLeft} className='hidden group-hover:block mt-14 rounded-full'/>
+   <BsChevronCompactLeft onClick={scrollLeft} className='hidden group-hover:block  rounded-full'/>
   {
   allUser.map((user,id)=>(
     
     <div className='z-10 h-16 mt-8 w-16 rounded-full overflow-hidden border-2 bg-gray-500 focus:outline-none focus:border-black'>
-    <Link to={`/${allUser._id}`} > <img className='w-full h-full object-cover transition-all duration-500'  key={user._id} src={user.photo} alt='photo'/>
+    <img className='w-full h-full object-cover transition-all duration-500'  key={user._id} src={user.photo} alt='photo'/>
        
-            </Link>
+           
     </div>
   ))
 }
@@ -217,7 +251,7 @@ return (
 </div>
 </div>
 
-<div className='flex float-right w-96 mt-24 md:m-0 mb-2 md:mb-4'>
+<div className='flex float-right w-96 mt-6 md:m-0 mb-2 md:mb-4'>
 
         <input onChange={(e)=>setSearch(e.target.value)} type='text' className='shadow appearance-none border rounded  w-full py-2 px-3 mt-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline' />
         <CiSearch size={50}/>
@@ -240,30 +274,28 @@ return (
             
             <div className='card home_card' key={item._id}>
             <div className='flex '>
-            <Link to={`${item.postedBy._id}`}><img className="w-10  rounded-full cursor-pointer" src={item.postedBy?.photo} /></Link>
-        <h5 className='mt-2 ml-2 font-semibold'>{item.postedBy?.name}</h5>
-        <button>
-       <BiAlignMiddle className='ml-72' onClick={handleToggle}/>
-      {auth.user._id===item.postedBy._id ? open  && (
+            <Link to={`${item.postedBy._id}`}><img className="  w-8 rounded-2xl h-8 ml-2 cursor-pointer" src={item.postedBy?.photo} /></Link>
+        <h5 className='mt-2 ml-4 font-semibold'>{item.postedBy?.name}</h5>
+      
+      {auth.user._id===item.postedBy._id ?   <button>
+       <Lottie style={{width:40}} animationData={animation_lktd8jxk} className='ml-72' onClick={handleToggle}/> {open && (
         <>
-        <AiFillDelete className='float-right ' onClick={()=>{handleDelete(item._id)}}/>
-        <AiFillEdit className='float-right ' onClick={openModal}/>
+        <AiFillDelete className='float-right mr-4 ' onClick={()=>{handleDelete(item._id)}}/>
+        <AiFillEdit className='float-right mr-4' onClick={openModal}/>
         {
           openModals && (<>
-            <div class="relative w-full max-w-md max-h-full">
+            <div class="relative w-full max-w-md mr-12 max-h-full">
         <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-            <button type="button" class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="popup-modal">
+            <button type="button" class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="popup-modal" onClick={openModal}>
                 <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
                 </svg>
                 <span class="sr-only">Close modal</span>
             </button>
             <div class="p-6 text-center">
-            <input type="text" placeholder='title' value={title} onChange={(e)=>setTitle(e.target.value)} />
-      <input type="text" placeholder='body' value={body} onChange={(e)=>setBody(e.target.value)}/>
+            <input className='outline-none mt-4 rounded-md m-1 p-1' type="text" placeholder='title' value={title} onChange={(e)=>setTitle(e.target.value)} />
+      <input type="text" className='outline-none mt-4 rounded-md m-1 p-1' placeholder='body' value={body} onChange={(e)=>setBody(e.target.value)}/>
       <div className="file-field input-field">
-      
-     
       <label className=' mb-2 inline-block text-neutral-700 dark:text-neutral-200 mt-32'   >
             {photo ? photo.name : "Upload Photo"}
               <input type='file' name='photo' accept='image/*' required  onChange={(e)=>setPhoto(e.target.files[0])}  className='relative m-0 block w-full min-w-0 flex-auto rounded border border-solid border-neutral-300 bg-clip-padding px-3 py-[0.32rem] text-base font-normal text-neutral-700 transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:overflow-hidden file:rounded-none file:border-0 file:border-solid file:border-inherit file:bg-neutral-100 file:px-3 file:py-[0.32rem] file:text-neutral-700 file:transition file:duration-150 file:ease-in-out file:[border-inline-end-width:1px] file:[margin-inline-end:0.75rem] hover:file:bg-neutral-200 focus:border-primary focus:text-neutral-700 focus:shadow-te-primary focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:file:bg-neutral-700 dark:file:text-neutral-100 dark:focus:border-primary' size={25}/>
@@ -277,12 +309,15 @@ return (
             </div>
         </div>
     </div>
+    
           </>)
+          
         }
        
         </>
-      ):null}
-        </button>
+      
+      )}  </button>:null}
+       
         </div>
        
         <h5 className='mt-2 ml-2 font-medium border-b-8'>{item.postedBy?.createdAt}</h5>
@@ -293,12 +328,12 @@ return (
        
             <span onClick={()=>likePost(item._id)}> 
       
-          { item.likes.includes(auth.user._id)? <FcLike />  :<FcLikePlaceholder /> } 
-             {item.likes.length}
+          { item.likes.includes(auth.user._id)? <Lottie style={{width:20 ,marginLeft:"5px"}} animationData={animation_lkqsqqa0} />  :<FcLikePlaceholder /> } 
+          <span className='ml-2'>{item.likes.length}</span>
              </span>
-          
+           
             <h5 className='flex '> <FaShareSquare className='mr-1 mt-[3px]'/> Shares</h5>
-            <h5 className='flex'><AiOutlineComment className='mr-1 mt-[3px]' onClick={()=>makeComment(item._id)}/> Comments</h5>
+            <h5 className='flex cursor-pointer' onClick={openComment}><AiOutlineComment className='mr-1 mt-[3px] cursor-pointer' onClick={openComment} /> Comments</h5>
           
           
         </div><hr/>
@@ -317,13 +352,14 @@ return (
                 type="text"
                 placeholder="Add a comment"
                 value={comment}
+                className='outline-none'
                 onChange={(e) => {
                   setComment(e.target.value);
                  
                 }}
                
               />
-              <button className='rounded-full mb-1 px-2  bg-green-600'
+              <button className='rounded-full mb-1 px-2  bg-teal-600'
                
                onClick={(e) => {
                 if(comment.length<1){
@@ -339,7 +375,7 @@ return (
         </form>
       </div>
       <div>
-      <button onClick={openComment} className='m-2 p-2 rounded-md hover:bg-slate-600 transition-all duration-300 ease-in bg-slate-400'>View Comments</button>
+     
            { 
         openComments &&  item.comments.map((p,index)=>(
                       <>
@@ -368,12 +404,14 @@ return (
          {allUser.map((i,userId)=>(
             <div className='flex py-2 float-right ' key={i._id}>
             <div className='z-10  mt-4   h-8 w-8 rounded-full overflow-hidden border-2 bg-gray-500 focus:outline-none focus:border-black'>
-            <Link to={`/${i._id}`} > <img className='w-full h-full object-cover transition-all duration-500' key={i._id} src={i.photo} alt='photo'/>
-            </Link>
+           <img className='w-full h-full object-cover transition-all duration-500 cursor-pointer'   key={i._id} src={i.photo} alt='photo'/>
+           
             </div>
             <span className='mt-5 font-semibold'>{i.name}</span>
+          
             </div>
          ))}
+         <Lottie animationData={animation_lkqhb84m}/>
        </div>
     </div>
   )

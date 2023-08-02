@@ -90,18 +90,18 @@ const UserProfile = () => {
     return (
         <div style={{ maxWidth: "550px", margin: "10px auto" }}>
           
-            <div style={{ display: 'flex', justifyContent: 'space-between', margin: "18px 5px", borderBottom: "1px solid grey" }}  >
+            <div className='flex justify-between border-b-2' >
 
              {
                 singleUser.map((user,i)=>(
                     <>
-                    <div className='mt-24 mx-auto w--32 rounded-md overflow-hidden'>
-                    <img src={user?.photo} alt="" className='w-full h-full object-cover transition-all duration-300' />
+                    <div className='mt-36 w-48 h-36'>
+                    <img src={user?.photo} alt="" className='w-full h-full object-fill rounded-md transition-all duration-300 scale-90' />
                 </div>
                 <div className='mt-24'>
-                    <div style={{ display: "flex", justifyContent: 'space-between', margin: "10px" }}>
+                    <div className='flex justify-between m-2.5'>
 
-                        <div className='h-2/6 flex  flex-col justify-center items-center'>
+                        <div className='h-2/6  flex flex-col justify-center items-center'>
 
                             <div className='float-right ml-36 md:ml-96'>
                       {user.followers.includes(auth.user._id)?<button className='rounded-md m-2 p-2 font-bold bg-slate-200' onClick={() =>{unfollowUser(user._id)} }>
@@ -119,8 +119,8 @@ const UserProfile = () => {
                             <span className='ml-16'>{user?.about}</span>
 
 
-                            <div className='border h-[50px] flex justify-center items-center w-full space-x-6  mt-4'>
-                                <div className='flex flex-col justify-around items-center' >
+                            <div className='border h-[50px] flex justify-center items-center w-72 space-x-6  mt-4'>
+                                <div>
                                     <h4>{singlePost.length}</h4>
                                     <p>Posts</p>
                                 </div>
