@@ -268,9 +268,9 @@ return (
           return item
         }
         
-        }).map((item)=>{
+        }).map((item,index)=>{
           return(
-            <div className='bg-white w-full md:w-[75%] h-full flex flex-col items-center m-auto'>
+            <div className='bg-white w-full md:w-[75%] h-full flex flex-col items-center m-auto' key={index}>
             
             <div className='card home_card' key={item._id}>
             <div className='flex '>
@@ -402,7 +402,7 @@ return (
        <div className='hidden md:w-1/5 bg-white shadow-lg mt-20  md:flex md:flex-col'>
          
          {allUser.map((i,userId)=>(
-            <div className='flex py-2 float-right ' key={i._id}>
+            <div className='flex py-2 float-right ' key={userId}>
             <div className='z-10  mt-4   h-8 w-8 rounded-full overflow-hidden border-2 bg-gray-500 focus:outline-none focus:border-black'>
            <img className='w-full h-full object-cover transition-all duration-500 cursor-pointer'   key={i._id} src={i.photo} alt='photo'/>
            
