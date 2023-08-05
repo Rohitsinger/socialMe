@@ -200,15 +200,15 @@ return (
 
 <div className='w-1/5 bg-white hidden md:block '>
 <div className=' flex flex-col flex-wrap justify-evenly  font-sans  text-sm font-normal'>
-       <Lottie animationData={animation_lkqfwh0y}/>
+       <Lottie animationData={animation_lkqfwh0y} className=''/>
        <div>
       <div className='mt-24 mx-auto w-32 rounded-md overflow-hidden'>
             <img src={auth?.user?.photo} alt="" className='w-full h-full object-cover transition-all duration-300' />
         </div>
-      <h3 className='flex flex-wrap text-2xl'>{auth?.user?.name}</h3>
+      <h3 className='flex flex-wrap text-lg justify-center'>{auth?.user?.name}</h3>
       <span className='text-xs'>{auth?.user?.email}</span><br/>
-      <span className='ml-16'>{auth?.user?.worksAt}</span><br/>
-      <span className='ml-8'>{auth?.user?.livesin}</span><br/>
+      <span className='ml-24'>{auth?.user?.worksAt}</span><br/>
+      <span className='ml-20'>{auth?.user?.livesin}</span><br/>
       <span>{auth?.user?.about}</span>
       {singleUser.map((user)=>(
   <div className='border h-[50px] flex justify-center items-center w-full space-x-6  mt-4'>
@@ -251,7 +251,7 @@ return (
 </div>
 </div>
 
-<div className='flex float-right w-96 mt-6 md:m-0 mb-2 md:mb-4'>
+<div className='flex float-right w-96 md:mt-20 md:m-0 mb-2 md:mb-4'>
 
         <input onChange={(e)=>setSearch(e.target.value)} type='text' className='shadow appearance-none border rounded  w-full py-2 px-3 mt-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline' />
         <CiSearch size={50}/>
@@ -399,7 +399,7 @@ return (
      </div>
     
      </div>
-       <div className='hidden md:w-1/5 bg-white shadow-lg  md:flex md:flex-col'>
+       <div className='hidden md:w-1/5 bg-white shadow-lg mt-20  md:flex md:flex-col'>
          
          {allUser.map((i,userId)=>(
             <div className='flex py-2 float-right ' key={i._id}>

@@ -1,12 +1,12 @@
 import React,{useState} from 'react'
 import '../Style/Signin.css'
 import { Link,useLocation,useNavigate } from 'react-router-dom'
-// import { UserContext } from '../../App'
+
 import axios from 'axios'
 import { useAuth } from '../../reducers/UserReducer'
 const Signin = () => {
   const [auth,setAuth] = useAuth()
-  // const {state,dispatch} = useContext(UserContext)
+ 
   const navigate = useNavigate()
   const [email,setEmail] = useState("")
   const [password,setPassword] = useState("")
@@ -15,14 +15,14 @@ const Signin = () => {
  
    try {
      const {data} =  await axios.post("/signin",{email,password})
-     console.log(data);
+   
      
     if(data){
        setAuth({...auth,user:data.user,token:data.token})
            localStorage.setItem("auth",JSON.stringify(data))
      
          
-           navigate(location.state || '/home')
+           navigate(location.state || '/home/feeds')
     }
          
    } catch (error) {

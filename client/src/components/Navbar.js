@@ -26,7 +26,7 @@ const openToggle =()=>{
     if(!auth.user){
        return [
         <div>
-        <a  className='md:hidden cursor-pointer text-4xl transition-all  duration-300 ' onClick={openToggle}>&#8801;</a>
+        <a  className='md:hidden cursor-pointer  text-4xl transition-all   duration-300 ' onClick={openToggle}>&#8801;</a>
           {
           openLinks && (
             <div className='   md:min-h-fit'>
@@ -55,12 +55,12 @@ const openToggle =()=>{
           <a  className='md:hidden  transition-all duration-400 ease-out cursor-pointer text-4xl' onClick={openToggle}>&#8801;</a>
             {
             openLinks && (
-              <div className='   md:min-h-fit'>
+              <div className='  md:min-h-fit'>
          <ul className='md:ml-48  md:flex md:items-end  '>
         
           <li className='mr-16 mt-4 mb-2 font-bold uppercase  hover:shadow-xl transition-all duration-300  p-1 m-1 rounded-md text-lg'><Link to="/home/profile" >Profile</Link></li>
         <li className='mr-16 mt-4  p-1 m-1 rounded-md font-bold text-lg  mb-2 transition-all duration-300 hover:shadow-xl uppercase'><Link to="/home/create">Create</Link></li>
-        <li onClick={handleLogout} className='mr-16 mt-4  p-1 m-1 rounded-md font-bold text-lg  mb-2 transition-all duration-300 hover:shadow-xl uppercase'>Logout </li>
+        <li onClick={handleLogout} className='mr-16 mt-4  cursor-pointer p-1 m-1 rounded-md font-bold text-lg  mb-2 transition-all duration-300 hover:shadow-xl uppercase'>Logout </li>
         </ul>
         </div>
             )
@@ -70,7 +70,7 @@ const openToggle =()=>{
         
           <li className='mr-16 mt-4 mb-2 font-bold uppercase  hover:shadow-xl transition-all duration-300  p-1 m-1rounded-md text-lg'><Link to="/home/profile" >Profile</Link></li>
         <li className='mr-16 mt-4  p-1 m-1 rounded-md font-bold text-lg  mb-2 transition-all duration-300 hover:shadow-xl uppercase'><Link to="/home/create">Create</Link></li>
-        <li onClick={handleLogout} className='mr-16 mt-4  p-1 m-1 rounded-md font-bold text-lg  mb-2 transition-all duration-300 hover:shadow-xl uppercase'>Logout </li>
+        <li onClick={handleLogout} className='mr-16 mt-4 cursor-pointer p-1 m-1 rounded-md font-bold text-lg  mb-2 transition-all duration-300 hover:shadow-xl uppercase'>Logout </li>
         </ul>
         </div>
           
@@ -93,9 +93,9 @@ const openToggle =()=>{
   }
   return (
     <>
-        <nav className=' w-[100%] h-20  fixed md:sticky'>
+        <nav className=' w-[100%] h-20 md:h-0 fixed md:sticky'>
         <ul id="nav-mobile" className='md:flex   w-full items-center shadow-md md:flex-row flex flex-wrap  bg-white inset-x-0 ' >
-      <Link to={auth.user?"/":'/signin'} className="  font-extrabold text-3xl text-teal-600 mb-6 translate duration-150 hover:transition-shadow ml-24">SocialMe</Link>
+      <Link to={auth.user?"/":'/signin'} className="  font-extrabold text-xl text-teal-600  translate duration-150 hover:transition-shadow ml-8">SocialMe</Link>
   
         <li className="md:ml-96 ">
            {renderList()}
