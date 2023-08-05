@@ -235,8 +235,8 @@ return (
 
 <div className=' w-full  md:w-3/5 overflow-scroll md:h-full bg scrollbar-hide mt-20'>
 <div id='content' className='flex ml-20  items-center  md:hidden '>
-<div  className='flex  group transition-all duration-300'>
-   <BsChevronCompactLeft onClick={scrollLeft} className='hidden group-hover:block  rounded-full'/>
+<div  className='md:flex  group transition-all duration-300 hidden'>
+   <BsChevronCompactLeft onClick={scrollLeft} className='hidden mt-4 group-hover:block  rounded-full'/>
   {
   allUser.map((user,id)=>(
     

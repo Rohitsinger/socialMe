@@ -13,7 +13,7 @@ const [singlePost,setSinglePost] = useState([])
   const [allUser,setAllUser] = useState([])
   
  
-   console.log(singleUser);
+
   //fetch all users
   const allUsers = async()=>{
     try {
@@ -29,7 +29,7 @@ allUsers()
   const fetchData = async()=>{
     const result = await axios.get("/mypost").then((res)=>
     setSinglePost(res.data.mypost))
-     console.log(singlePost);
+    
    }
   useEffect(()=>{
     fetchData();
