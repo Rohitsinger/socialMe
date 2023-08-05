@@ -200,7 +200,7 @@ return (
 
 <div className='w-1/5 bg-white hidden md:block '>
 <div className=' flex flex-col flex-wrap justify-evenly  font-sans  text-sm font-normal'>
-       <Lottie animationData={animation_lkqfwh0y} className=''/>
+       <Lottie animationData={animation_lkqfwh0y} className='mt-20'/>
        <div>
       <div className='mt-24 mx-auto w-32 rounded-md overflow-hidden'>
             <img src={auth?.user?.photo} alt="" className='w-full h-full object-cover transition-all duration-300' />
