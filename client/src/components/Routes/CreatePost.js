@@ -2,7 +2,8 @@ import React,{useEffect, useState} from 'react'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import axios from 'axios'
-// import {usePosts} from '../../reducers/UserReducer'
+
+//creating posts
 const CreatePost = () => {
 
   const navigate = useNavigate()
@@ -12,7 +13,7 @@ const CreatePost = () => {
   const [posts,setPosts] = useState([])
 
   const fetchPost=async()=>{
-    const result = await axios.get("/allPost")
+     await axios.get("/allPost")
     
       .then((res)=>
     
@@ -22,7 +23,7 @@ const CreatePost = () => {
       fetchPost()
     
      }, [])
-  const postDetails =()=>{
+  const postDetails =async()=>{
 
 try {
   const appenddata = new  FormData()
@@ -31,14 +32,10 @@ try {
 
   appenddata.append("photo",photo)
 
- 
+ await axios.post("/createpost",appenddata)
 
-const {data} =  axios.post("/createpost",appenddata)
-console.log(data);
-fetchPost()
-
-  toast.success('Created Successfully')  
-navigate('/home/feeds')  
+ toast.success('Created Successfully')  
+  navigate('/home/feeds')  
 
 
 
@@ -50,7 +47,7 @@ navigate('/home/feeds')
 
   return (
     <div className='  md:bg-[#ebd7e2] md:h-screen  md:w-full flex justify-center  items-center'>
-   <div className='h-[400px] w-[500px]  bg-white  justify-center items-center'>
+   <div className='h-[400px] w-[500px] mt-20 bg-white  justify-center items-center'>
      <div className='border mt-40 md:mt-0 md:h-full md:w-full flex flex-col space-y-12 bg-white shadow-2xl rounded-xl'>
         <h2 className='font-semibold text-center font-serif text-3xl'>Create Post</h2>
          <input className="outline-none hover:bg-slate-50" type="text" placeholder='Enter the title' value={title} onChange={(e)=>setTitle(e.target.value)} />

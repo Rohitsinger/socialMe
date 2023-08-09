@@ -5,9 +5,9 @@ import {AiOutlineComment,AiFillDelete, AiFillEdit} from 'react-icons/ai'
 import {HiTrendingUp} from 'react-icons/hi'
 import {BsChevronCompactLeft,BsChevronCompactRight} from 'react-icons/bs'
 import {FaShareSquare} from 'react-icons/fa'
-import {BiAlignMiddle} from 'react-icons/bi'
-import {FcLike,FcLikePlaceholder} from 'react-icons/fc'
-import {BiSolidLike,BiSolidDislike} from 'react-icons/bi'
+
+import {FcLikePlaceholder} from 'react-icons/fc'
+
 import axios from 'axios'
 import {  useAuth } from '../../reducers/UserReducer'
 import { toast } from 'react-toastify'
@@ -37,7 +37,7 @@ const Feeds = () => {
     const [body,setBody] = useState({})
     const [photo,setPhoto] = useState({})
 
-   
+ 
  
 
    //scroll left
@@ -109,6 +109,7 @@ const result = await axios.get("/allPost")
   fetchPost()
 
  }, [])
+ 
      //make comment
  
   const makeComment = async(text,postId)=>{
@@ -116,6 +117,7 @@ const result = await axios.get("/allPost")
     const response = await axios.put(`/comment`,{postId,text}).then((res)=>setCommented(res.data.comments.text))
 
     fetchPost()
+   
     setComment("")
     } catch (error) {
       console.log(error);
@@ -128,6 +130,7 @@ const result = await axios.get("/allPost")
         const result = await axios.get("/get-comments")
         .then((res)=>setComments(res.data.postComments)).catch(err=>console.log(err))
         setComment("")
+        
     }
  
     useEffect(() => {
@@ -135,8 +138,8 @@ const result = await axios.get("/allPost")
         fetchComments()
          
         }, [])
-        
-          //like the post
+
+     //like the post
     const likePost = async (postId)=>{
       const likeIt = await axios.patch(`/like/${postId}`).then(res=>{
      setLiked(res.data)
@@ -180,14 +183,18 @@ const handleDelete = async(postId)=>{
     axios.get(`/singleUser/${auth.user._id}`).then((res) => {
         
         setSingleUser(res.data.user)
-   
-    
         setSinglePost(res.data.post)
-
-    })
-
-
+       })
 }, [])
+
+const setDeleteComments = async(commentId,postId)=>{
+  const {result} = await axios.delete(`/delete-comments/${postId}`,{commentId:commentId})
+ 
+
+    toast.success("comment deleted")
+    fetchPost()
+
+}
 
   const openModal=()=>{
     setOpenModals(!openModals)
@@ -233,7 +240,7 @@ return (
 
 </div>
 
-<div className=' w-full  md:w-3/5 overflow-scroll md:h-full bg scrollbar-hide mt-20'>
+<div className=' w-full  md:w-3/5 overflow-scroll md:h-full  mt-20'>
 <div id='content' className='flex ml-20  items-center  md:hidden '>
 <div  className='md:flex  group transition-all duration-300 hidden'>
    <BsChevronCompactLeft onClick={scrollLeft} className='hidden mt-4 group-hover:block  rounded-full'/>
@@ -329,7 +336,7 @@ return (
             <span onClick={()=>likePost(item._id)}> 
       
           { item.likes.includes(auth.user._id)? <Lottie style={{width:20 ,marginLeft:"5px"}} animationData={animation_lkqsqqa0} />  :<FcLikePlaceholder /> } 
-          <span className='ml-2'>{item.likes.length}</span>
+          <span className='ml-2'>{item.likes.length} likes</span>
              </span>
            
             <h5 className='flex '> <FaShareSquare className='mr-1 mt-[3px]'/> Shares</h5>
@@ -377,16 +384,19 @@ return (
       <div>
      
            { 
-        openComments &&  item.comments.map((p,index)=>(
+        openComments && ( item.comments.map((p,index)=>(
                       <>
                       <div className='flex space-x-10' key={index}>
+
                       <img src={p.postedBy.photo} alt='photo' className='rounded-full h-8 w-8'/>
                  <span>{p.postedBy.name}</span>
                       <h2>{p.text}</h2>
-                   
+                      
+                      <AiFillDelete className='float-right mr-4 cursor-pointer' onClick={()=>setDeleteComments(p._id,item._id)}/>
                  </div>
+
                  </>
-                    ))
+                    )))
                }
             </div>
      </div>

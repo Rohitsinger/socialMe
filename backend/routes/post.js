@@ -14,7 +14,7 @@ cloudinary.config({
 router.get('/allpost',(req,res)=>{
    Post.find({})
    .populate("postedBy","_id name email photo")
-   .populate("comments.postedBy","_id name photo")
+   .populate("comments.postedBy","_id name photo").sort({createdAt:-1})
    .then(posts=>{
       res.json({posts})
    })
@@ -38,7 +38,7 @@ router.post('/createpost',requireLogin,(req,res)=>{
     photo:result.url,
     postedBy:req.user
    })
-   // . sort({createdAt:-1})
+  
    post.save().then(result=>{
     res.status(201).send({
       success:true,
@@ -124,11 +124,33 @@ const comments =  await Post.find().populate("comments.postedBy","_id name photo
  
 })
 router.delete('/delete-comments/:id', requireLogin,async(req,res)=>{
-   const _id = req.params.id
-try {
-   const deleted =  await Post.findByIdAndDelete(_id)
+   try{
+     const post = await Post.findById(req.params.id)
    
- res.status(200).send({message:"Deleted Successfully",success:true,deleted})  
+    if(!post){
+      return res.status(400).json({
+         success:false,
+         message:"Post not found"
+      });
+   }
+
+if(post.postedBy._id.toString()===req.user._id.toString()){
+    await post.comments.forEach((item,index)=> {
+         if(item._id.toString()===req.body.commentId.toString()){
+           return post.comments.splice(index,1)
+         }
+       });
+    await post.save()
+    return res.status(200).send({message:"Selected Comment Deleted",success:"true"})
+      }   else{
+         await post.comments.forEach((item,index)=> {
+            if(item.postedBy.toString()===req.user._id.toString()){
+              return post.comments.splice(index,1)
+            }
+          });
+      }
+   await post.save()
+  return res.status(200).send({message:"Deleted Post",success:"true"})
 } catch (error) {
    console.log(error);
 }

@@ -40,7 +40,7 @@ const Signin = () => {
        
         <input type="email" className='outline-none hover:bg-gray-50 mt-2 p-2 m-2 rounded-sm' placeholder='Enter your Email' autoComplete='off' value={email} onChange={(e)=>setEmail(e.target.value)}/>
         <input type="password" className='outline-none hover:bg-gray-50 mt-2 p-2 m-2 rounded-sm' placeholder='Enter your Password' autoComplete='off' value={password} onChange={(e)=>setPassword(e.target.value)} /> 
-         <button className="m-2 p-2 bg-green-500 rounded-md w-48 items-center mx-auto " onClick={()=>PostData()}>Sign In</button>
+         <button className="m-2 p-2 text-white bg-green-500 rounded-md w-48 items-center mx-auto hover:bg-green-600" onClick={()=>PostData()}>Sign In</button>
         <h5><Link to ='/signup'>Have an Account?</Link></h5>
      </div>
        </div>

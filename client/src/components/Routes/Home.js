@@ -1,5 +1,5 @@
 
-import animation_lkqxj0al from '../../components/animations/animation_lkqxj0al.json'
+
 import { Link } from 'react-router-dom'
 import animation_lkqhb84m from '../../components/animations/animation_lkqhb84m.json'
 import Lottie from 'lottie-react'
@@ -8,11 +8,11 @@ const Home = () => {
     
  
   return (
-    <div className='min-h-full md:flex  justify-center items-center m-auto   w-full '>
-    <div className='md:w-1/3 ml-24  '>
-    <Lottie style={{width:300 }} animationData={animation_lkqxj0al}/>
+    <div className='min-h-full md:flex  justify-center items-center m-auto   w-full bg-slate-500 '>
+    <div className='md:w-1/3   '>
+   <img src='https://images.pexels.com/photos/2883135/pexels-photo-2883135.jpeg?auto=compress&cs=tinysrgb&w=600' alt='social media'/>
     </div>
-    <div style={{fontFamily:"sans-serif"}} className='md:w-2/3 p-2 m-2'>
+    <div style={{fontFamily:"sans-serif"}} className='md:w-2/3 p-2 m-2 mt-36'>
   
    <h2 className='text-lg'> Welcome to our Social Media Hub!</h2>
 

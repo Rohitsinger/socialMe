@@ -30,7 +30,7 @@ const openToggle =()=>{
           {
           openLinks && (
             <div className='   md:min-h-fit'>
-       <ul className='md:ml-48  md:flex md:items-end  '>
+       <ul className=' md:flex md:items-end  '>
       
         <li className='mr-16 mt-4 mb-2 font-bold uppercase  hover:shadow-xl transition-all duration-300  p-1 m-1 rounded-md text-lg'><Link to="/signin" >Signin</Link></li>
       <li className='mr-16 mt-4  p-1 m-1 rounded-md font-bold text-lg  mb-2 transition-all duration-300 hover:shadow-xl uppercase'><Link to="/signup">Signup</Link></li>
@@ -39,7 +39,7 @@ const openToggle =()=>{
           )
         }
            <div className=' hidden  md:block md:min-h-fit'>
-       <ul className='md:ml-48  md:flex md:items-end  '>
+       <ul className=' md:flex md:items-end  '>
       
         <li className='mr-16 mt-4 mb-2 font-bold uppercase  hover:shadow-xl transition-all duration-300  p-1 m-1rounded-md text-lg'><Link to="/signin" >Signin</Link></li>
       <li className='mr-16 mt-4  p-1 m-1 rounded-md font-bold text-lg  mb-2 transition-all duration-300 hover:shadow-xl uppercase'><Link to="/signup" >Signup</Link></li>
@@ -56,7 +56,7 @@ const openToggle =()=>{
             {
             openLinks && (
               <div className='  md:min-h-fit'>
-         <ul className='md:ml-48  md:flex md:items-end  '>
+         <ul className='  md:flex md:items-end  '>
         
           <li className='mr-16 mt-4 mb-2 font-bold uppercase  hover:shadow-xl transition-all duration-300  p-1 m-1 rounded-md text-lg'><Link to="/home/profile" >Profile</Link></li>
         <li className='mr-16 mt-4  p-1 m-1 rounded-md font-bold text-lg  mb-2 transition-all duration-300 hover:shadow-xl uppercase'><Link to="/home/create">Create</Link></li>
@@ -66,7 +66,7 @@ const openToggle =()=>{
             )
           }
              <div className=' hidden  md:block  md:min-h-fit'>
-         <ul className='md:ml-48  md:flex md:items-end  '>
+         <ul className=' md:flex md:items-end  '>
         
           <li className='mr-16 mt-4 mb-2 font-bold uppercase  hover:shadow-xl transition-all duration-300  p-1 m-1rounded-md text-lg'><Link to="/home/profile" >Profile</Link></li>
         <li className='mr-16 mt-4  p-1 m-1 rounded-md font-bold text-lg  mb-2 transition-all duration-300 hover:shadow-xl uppercase'><Link to="/home/create">Create</Link></li>
@@ -74,7 +74,7 @@ const openToggle =()=>{
         </ul>
         </div>
           
-        <button className= 'z-10  transition-all duration-400 ease-out  flex-col relative  float-right  ml-64 md:ml-32 h-8 w-8 rounded-full overflow-hidden  border-2 bg-gray-500 focus:outline-none focus:border-white'>
+        <button className= 'z-10  transition-all duration-400 ease-out  flex-col relative  float-right  ml-64  h-8 w-8 rounded-full overflow-hidden  border-2 bg-gray-500 focus:outline-none focus:border-white'>
         <img  className="w-full  h-full object-cover  transition-all duration-500 " src={auth?.user?.photo} onClick={hanldleToggle}/>
         </button>
         { open && (
@@ -93,11 +93,11 @@ const openToggle =()=>{
   }
   return (
     <>
-        <nav className=' w-[100%] h-20 md:h-0 fixed md:sticky'>
-        <ul id="nav-mobile" className='md:flex   w-full items-center shadow-md md:flex-row flex flex-wrap  bg-white inset-x-0 ' >
+        <nav className=' w-[100%] h-20 md:h-0 fixed md:sticky '>
+        <ul id="nav-mobile" className='md:flex mx-auto  w-full items-center shadow-md md:flex-row flex flex-wrap  bg-white inset-x-0 ' >
       <Link to={auth.user?"/":'/signin'} className="  font-extrabold text-xl text-teal-600  translate duration-150 hover:transition-shadow ml-8">SocialMe</Link>
   
-        <li className="md:ml-96 ">
+        <li className="md:ml-80 ">
            {renderList()}
    
            </li>
