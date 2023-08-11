@@ -17,12 +17,9 @@ const UserProfile = () => {
     const [singlePost, setSinglePost] = useState([])
     const [allUser, setAllUser] = useState([])
     
-    console.log(singleUser,allUser);
-    const { userId } = useParams()
+ const { userId } = useParams()
     
-  
-
-    //fetch all users
+   //fetch all users
     const allUsers = async () => {
         try {
             const response = await axios.get(`/alluser`).then(res => setAllUser(res.data))
@@ -143,18 +140,14 @@ const UserProfile = () => {
               }
             </div>
             <div className='grid md:grid md:grid-cols-2 '>
-             {singlePost.map((posts,i)=>(
+             {singlePost.length>0 ? singlePost.map((posts,i)=>(
                 <div className='max-w-sm  transition-all bg-white border-4 border-gray-200 rounded-lg shadow hover:dark:bg-gray-800 dark:border-gray-700' >
                     <div className=' p-6'>
                         <img src={posts.photo} className='w-full rounded-2xl' alt={posts.title} /> 
                     </div>
                     <div className=' flex justify-between mt-4'>
        
-       {/* <span onClick={()=>likePost(item._id)}> */}
- 
-     {/* {item.likes ? <FcLikePlaceholder />  :<FcLike /> } */}
-        
-       {/* </span> */}
+    
      
        <h5 className='flex '> <FaShareSquare className='mr-1 mt-[3px]'/> Shares</h5>
        <h5 className='flex'><AiOutlineComment className='mr-1 mt-[3px]'/> Comments</h5>
@@ -166,7 +159,7 @@ const UserProfile = () => {
 
 
                 </div>
-             ))}
+             )):<div><h1 className='flex justify-center items-center mt-10 text-4xl text-teal-500'>No posts</h1></div>}
 
             </div>
         </div>

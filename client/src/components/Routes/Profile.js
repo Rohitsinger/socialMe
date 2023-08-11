@@ -96,7 +96,7 @@ allUsers()
         </div>
        </div>
        <div className='grid md:grid md:grid-cols-2 '>
-       {
+       { singlePost.length>0 ?
         singlePost.map((item)=>{
           return(
       
@@ -110,7 +110,7 @@ allUsers()
           
             </div>
           )
-        })
+        }):<div><h1 className='flex justify-center items-center mt-10 text-4xl text-teal-500'>No posts</h1></div>
        }
         
         
