@@ -39,8 +39,8 @@ setAuth({...auth,user:data.user,token:data.token})
  }
  return (
     <>
-    <div className='md:bg-[#ebd7e2] md:h-screen  md:w-full flex justify-center mt-20 items-center'>
-     <div className='h-[524px] w-[700px] bg-white flex justify-center items-center'>
+    <div className='md:bg-[#ebd7e2] h-screen w-full flex justify-center  items-center'>
+     <div className='h-[524px] w-[700px] bg-white flex justify-center mt-10 items-center'>
        <div className='border md:h-full md:w-full bg-white shadow-2xl rounded-xl'>
        <h2 className='text-2xl text-center'>Welcome Signup Here</h2>
        

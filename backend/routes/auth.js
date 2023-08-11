@@ -20,17 +20,7 @@ cloudinary.config({
 router.get('/protected',requireLogin,(req,res)=>{
   res.send("Hello User")
 })
-router.get("/", requireLogin, (req, res) => {
-  res.send("hello");
-});
 
-// router.get('/signup', (req,res)=>{
-//   res.send({
-//     name: 'Hello',
-//     email: {},
-//     password: {}
-//   })
-// })
 
 
 

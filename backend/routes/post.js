@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
 const requireLogin = require('../middleware/requirelogin');
-const { CommentedModel } = require("../models/post");
+
 const Post = mongoose.model("Post")
 const cloudinary = require('cloudinary').v2
 cloudinary.config({ 

@@ -1,4 +1,4 @@
-// export const initialState = null
+
 
 import axios from "axios";
 import { createContext, useContext, useEffect, useState } from "react";
@@ -31,11 +31,9 @@ const AuthProvider =({children})=>{
       const [posts,setPosts] = useState([])
       const fetchPosts=async()=>{
       const result = await axios.get("/allPost")
-     
         .then((res)=>
         setPosts(res.data.posts))
-      
-         console.log(posts);
+    
   
     }
 useEffect(()=>{

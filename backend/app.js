@@ -1,13 +1,11 @@
-// const dotenv = require("dotenv")
-const express = require('express')
 
-const app = express()
-const mongoose = require('mongoose')
-const cors = require('cors')
+const express = require('express');
 
-const {MONGOURI,PORT} = require('./keys')
+const app = express();
+const mongoose = require('mongoose');
+const cors = require('cors');
 
-//for chats
+const {MONGOURI,PORT} = require('./keys');
 
  const fileUpload = require('express-fileupload')
 app.use(fileUpload({
@@ -31,7 +29,6 @@ mongoose.connection.on('err',()=>{
 
 require('./models/user')
 require('./models/post')
-// require('./models/like')
 
 app.use(express.json())
 app.use(express.urlencoded({
@@ -44,8 +41,10 @@ app.use(require('./routes/post'))
 app.use(require('./routes/user'))
 
 
-
+app.get('/',(req,res)=>{
+    res.send("Hello users")
+})
 
 app.listen(PORT,()=>{
-    console.log("server is running on port 5000", PORT);
+    console.log("server is running on port 8000", PORT);
 })

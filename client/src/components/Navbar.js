@@ -95,13 +95,12 @@ const openToggle =()=>{
     <>
         <nav className=' w-[100%] h-20 md:h-0 fixed md:sticky '>
         <ul id="nav-mobile" className='md:flex mx-auto  w-full items-center shadow-md md:flex-row flex flex-wrap  bg-white inset-x-0 ' >
-      <Link to={auth.user?"/":'/signin'} className="  font-extrabold text-xl text-teal-600  translate duration-150 hover:transition-shadow ml-8">SocialMe</Link>
-  
-        <li className="md:ml-80 ">
+        <Link to={auth.user?"/":'/signin'} className=" hidden  md:block font-extrabold text-xl text-teal-600  translate duration-150 hover:transition-shadow ml-8">SocialMe</Link>
+         <li className="md:ml-80 ">
            {renderList()}
    
            </li>
-    
+           <Link to={auth.user?"/":'/signin'} className=" md:hidden block font-extrabold text-xl text-teal-600  translate duration-150 hover:transition-shadow ml-8">SocialMe</Link>
 
       </ul>
   
